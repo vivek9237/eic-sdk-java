@@ -151,8 +151,13 @@ public class EicClientUtils {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(map);
     }
+    public static String convertListToJsonString(List<Object> list) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(list);
+    }
     public static Map<String, Object> parseYamlFile(String filePath) throws FileNotFoundException {
-        InputStream inputStream = new FileInputStream(filePath);
+        //InputStream inputStream = new FileInputStream(filePath);
+        InputStream inputStream = EicClientUtils.class.getResourceAsStream(filePath);
         Yaml yaml = new Yaml();
         return yaml.load(inputStream);
     }

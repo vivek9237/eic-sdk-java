@@ -9,8 +9,6 @@ import java.util.Map;
 import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 public class EicClient {
 	
@@ -21,13 +19,13 @@ public class EicClient {
 	private RefreshToken refreshToken;
 	private Map<String,Object> eicRestApiConfig;
 
-	EicClient(String tenant, String refreshToken) throws Exception{
+	public EicClient(String tenant, String refreshToken) throws Exception{
 		this(new HashMap<String, String>() {{ put("tenant", tenant); put("refreshToken", refreshToken);}});
 	}
-	EicClient(String tenant,String username,String password) throws Exception{
+	public EicClient(String tenant,String username,String password) throws Exception{
 		this(new HashMap<String, String>() {{ put("tenant", tenant); put("username", username); put("password", password);}});
 	}
-	EicClient(Map<String,String> configs) throws Exception{
+	public EicClient(Map<String,String> configs) throws Exception{
 		String protocol = configs.getOrDefault("protocol","https");
 		String tenant = configs.getOrDefault("tenant",null);
 		String domainName = configs.getOrDefault("domainName","saviyntcloud.com");
@@ -45,7 +43,8 @@ public class EicClient {
 		} else {
 			throw new Exception("[username and password] or [refreshToken] is null.");
 		}
-		eicRestApiConfig = EicClientUtils.parseYamlFile("eic-rest-sdk/src/main/resources/eic_rest_api.yml");
+		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		eicRestApiConfig = EicClientUtils.parseYamlFile("/eic_rest_api.yml");
 	}
 	
 	public String getAccessToken() throws AuthenticationException, IOException, Exception{
@@ -138,7 +137,7 @@ public class EicClient {
 	}
 	
 	public List<Map<String,Object>> getAllUsers(Map<String,Object> body) throws AuthenticationException, IOException, Exception{
-		List<Map<String,Object>> userDetailsList = List.of();
+		List<Map<String,Object>> userDetailsList = new ArrayList<>();
 		Integer pageSize = 3;
 		if(body.get("max")==null){
 			body.put("max",pageSize);
@@ -150,7 +149,7 @@ public class EicClient {
 		if(eicResponse!=null && eicResponse.getResponseCode()==200){
 			Object userDetailsObj = EicClientUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
 			if(userDetailsObj!=null && userDetailsObj instanceof Map){
-				userDetailsList = List.of((Map<String,Object>)userDetailsObj);
+				userDetailsList.add((Map<String,Object>)userDetailsObj);
 			}  else if (userDetailsObj!=null && userDetailsObj instanceof List){
 				Integer totalCount = Integer.parseInt(eicResponse.getBodyAsJson().get("totalcount").getAsString());
 				Integer displaycount = Integer.parseInt(eicResponse.getBodyAsJson().get("displaycount").getAsString());
@@ -203,12 +202,12 @@ public class EicClient {
 		if(eicResponse.getResponseCode()==200){
 			Object userDetailsObj = EicClientUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
 			if(userDetailsObj!=null){
-				userDetailsList = List.of((Map<String,Object>)userDetailsObj);
+				userDetailsList = (List<Map<String,Object>>)userDetailsObj;
 			} else{
 				userDetailsList = (List<Map<String,Object>>)EicClientUtils.jsonToMap(eicResponse.getBody()).get("userlist");
 			}
 		} else{
-			userDetailsList = List.of();
+			userDetailsList = new ArrayList<>();
 		}
 		return userDetailsList;
 	}
