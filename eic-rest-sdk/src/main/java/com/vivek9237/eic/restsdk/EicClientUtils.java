@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Calendar;
@@ -210,5 +212,25 @@ public class EicClientUtils {
             isEmpty = true;
         }
         return isEmpty;
+    }
+    
+    public static String convertToQueryParameters(Map<String, String> params) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        try {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (first) {
+                    first = false;
+                } else {
+                    result.append("&");
+                }
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
     }
 }

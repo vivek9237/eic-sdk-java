@@ -16,3 +16,9 @@ Users:
     METHOD: POST
     HEADER:
       Content-Type: application/json
+Datasets:
+  Get_Dataset_Values:
+    URL: "/ECM/api/v5/getDatasetValues"
+    METHOD: GET
+    HEADER:
+      Content-Type: application/json

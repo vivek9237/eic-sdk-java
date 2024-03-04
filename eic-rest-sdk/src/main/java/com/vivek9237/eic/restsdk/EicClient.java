@@ -71,7 +71,6 @@ public class EicClient {
 		}
 		return accessToken;
 	}
-	
 	private Map<String, Object> getApiConfigMap(String category, String api){
 		Map<String, Object> apiConfigMap = ((Map<String, Object>)((Map<String, Object>) eicRestApiConfig.get(category)).get(api));
 		return apiConfigMap;
@@ -99,7 +98,6 @@ public class EicClient {
 		}
 		return this.accessToken.getToken();
 	}
-
 	private String getAccessTokenFromRefreshToken() throws Exception {
 		Map<String,Object> apiConfig = getApiConfigMap("Authentication", "Refresh_Authorization_Token");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
@@ -135,7 +133,6 @@ public class EicClient {
 			return null;
 		}
 	}
-	
 	public List<Map<String,Object>> getAllUsers(Map<String,Object> body) throws AuthenticationException, IOException, Exception{
 		List<Map<String,Object>> userDetailsList = new ArrayList<>();
 		Integer pageSize = 3;
@@ -188,7 +185,6 @@ public class EicClient {
 		}
 		return userDetailsList;
 	}
-
 	private List<Map<String,Object>> getUsers(Map<String,Object> body) throws Exception{
 		List<Map<String,Object>> userDetailsList;
 		Map<String,Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
@@ -211,7 +207,6 @@ public class EicClient {
 		}
 		return userDetailsList;
 	}
-	
 	private EicResponse getUsers(Map<String,Object> body, Boolean test) throws AuthenticationException, IOException, Exception{
 		List<Map<String,Object>> userDetailsList;
 		Map<String,Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
@@ -228,24 +223,50 @@ public class EicClient {
 			return eicResponse;
 		}
 	}
-
-	public String createUser(String authToken, Map<String,Object> userParams, Map<String,String> securityQuestions, Map<String,Object> otherSettings)
-			throws IOException {
+	
+	public String createUser(Map<String,Object> userParams, Map<String,String> securityQuestions, Map<String,Object> otherSettings)
+			throws AuthenticationException, IOException, Exception {
 		String apiUrl = EIC_BASE_URL + "/ECM/api/v5/createUser";
 		String method = "POST";
 		String requestBody = "";
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "application/json");
-		headers.put("Authorization", "Bearer " + authToken);
+		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicResponse eicResponse = EicClientUtils.sendRequest(apiUrl, method, headers, requestBody);
 		return eicResponse.getBody();
 	}
-
-	public String createUser(String authToken, Map<String,Object> userParams, Map<String,String> securityQuestions) throws IOException {
-		return createUser(authToken, userParams, securityQuestions, null);
+	public String createUser( Map<String,Object> userParams, Map<String,String> securityQuestions) throws AuthenticationException, IOException, Exception {
+		return createUser(userParams, securityQuestions, null);
 	}
-
-	public String createUser(String authToken, Map<String,Object> userParams) throws IOException {
-		return createUser(authToken, userParams, null);
+	public String createUser(Map<String,Object> userParams) throws AuthenticationException, IOException, Exception {
+		return createUser(userParams, null);
+	}
+	
+	public List<Map<String,Object>> getDatasetValues(String datasetName) throws AuthenticationException, IOException, Exception{
+		List<Map<String,Object>> datasetValues;
+		Map<String,String> body = new HashMap<String,String>();
+		body.put("datasetname", datasetName);
+		EicResponse eicResponse = getDatasetValues(body);
+		Integer errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsInt();
+		if(errorCode==0){
+			datasetValues = (List<Map<String,Object>>)EicClientUtils.jsonToMap(eicResponse.getBody()).get("dataset_values");
+		} else {
+			throw new Exception(eicResponse.getBodyAsJson().get("msg").toString());
+		}
+		return datasetValues;
+	}
+	private EicResponse getDatasetValues(Map<String,String> body) throws AuthenticationException, IOException, Exception{
+		Map<String,Object> apiConfig = getApiConfigMap("Datasets", "Get_Dataset_Values");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL")+"?"+EicClientUtils.convertToQueryParameters(body);
+		String method = (String) apiConfig.get("METHOD");
+		Map<String, String> headers = (Map<String, String>)apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, null);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if(eicResponse.getResponseCode()==200){
+			return eicResponse;
+		} else{
+			throw new Exception(eicResponse.toString());
+		}
 	}
 }
