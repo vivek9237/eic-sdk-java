@@ -34,6 +34,7 @@ jobs:
         path: staging
   publish:
     runs-on: ubuntu-latest
+    needs: publish-job
     permissions:
       contents: write  # if you have a protection rule on your repository, you'll need to give write permission to the workflow.
     steps:
