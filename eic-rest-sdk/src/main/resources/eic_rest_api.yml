@@ -22,3 +22,9 @@ Datasets:
     METHOD: GET
     HEADER:
       Content-Type: application/json
+Accounts:
+  Get_Account_Details:
+    URL: "/ECM/api/v5/getAccounts"
+    METHOD: POST
+    HEADER:
+      Content-Type: application/json

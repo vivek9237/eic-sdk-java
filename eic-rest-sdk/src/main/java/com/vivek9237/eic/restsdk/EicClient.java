@@ -195,7 +195,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if(eicResponse.getResponseCode()==200){
+		if(eicResponse.getResponseCode()>=200 || eicResponse.getResponseCode()<=299){
 			Object userDetailsObj = EicClientUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
 			if(userDetailsObj!=null){
 				userDetailsList = (List<Map<String,Object>>)userDetailsObj;
@@ -217,7 +217,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if(eicResponse.getResponseCode()==200){
+		if(eicResponse.getResponseCode()>=200 || eicResponse.getResponseCode()<=299){
 			return eicResponse;
 		} else{
 			return eicResponse;
@@ -263,7 +263,50 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, null);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if(eicResponse.getResponseCode()==200){
+		if(eicResponse.getResponseCode()>=200 || eicResponse.getResponseCode()<=299){
+			return eicResponse;
+		} else{
+			throw new Exception(eicResponse.toString());
+		}
+	}
+	
+	public List<Map<String,Object>> getAccounts(String username) throws AuthenticationException, IOException, Exception{
+		return getAccounts(username, null);
+	}
+	public List<Map<String,Object>> getAccounts(String username, String endpointName) throws AuthenticationException, IOException, Exception{
+		return getAccounts(username, endpointName, true);
+	}
+	public List<Map<String,Object>> getAccounts(String username, String endpointName, Boolean active) throws AuthenticationException, IOException, Exception{
+		Map<String,Object> body = new HashMap<String,Object>();
+		body.put("username", username);
+		body.put("endpoint", endpointName);
+		body.put("advsearchcriteria", new HashMap<String, String>() {{put("status","ACTIVE");};});
+		return getAccounts(body);
+	}
+	public List<Map<String,Object>> getAccounts(Map<String,Object> body) throws AuthenticationException, IOException, Exception{
+		List<Map<String,Object>> accounts = null;
+		EicResponse eicResponse = getAccounts(body, true);
+		String errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsString();
+		System.out.println(errorCode);
+		if(errorCode.equals("0")){
+			accounts = (List<Map<String,Object>>)EicClientUtils.jsonToMap(eicResponse.getBody()).get("Accountdetails");
+		} else {
+			throw new Exception(eicResponse.getBodyAsJson().get("msg").getAsString());
+		}
+		return accounts;
+	}
+	private EicResponse getAccounts(Map<String,Object> body, Boolean test) throws AuthenticationException, IOException, Exception{
+		List<Map<String,Object>> userDetailsList;
+		Map<String,Object> apiConfig = getApiConfigMap("Accounts", "Get_Account_Details");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.convertMapToJsonString(body);
+		Map<String, String> headers = (Map<String, String>)apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if(eicResponse.getResponseCode()>=200 || eicResponse.getResponseCode()<=299){
+			System.out.println(eicRequest.toString());
 			return eicResponse;
 		} else{
 			throw new Exception(eicResponse.toString());
