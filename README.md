@@ -1,9 +1,9 @@
 # eic-rest-sdk
 
 ## About
-This Java-based DSK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by directly using EIC v5 API features.
+This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by directly using EIC v5 API features.
 ## Sample SDK Usage
-Sample java program -
+Sample Java program -
 
 App.java
 ```Java
