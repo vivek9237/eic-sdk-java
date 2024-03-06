@@ -13,7 +13,7 @@ import javax.naming.AuthenticationException;
 import com.vivek9237.eic.restsdk.EicClient;
 
 public class App {
-    public static void main( String[] args ) throws Exception
+    public static void main( String[] args )
     {
         try {
             // Creating an instance of the EicClient class with tenant, username, and password parameters
