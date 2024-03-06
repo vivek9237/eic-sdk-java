@@ -11,7 +11,8 @@ public class EicRefreshToken {
     private Date exipryDate;
 
     /**
-     * Constructs a EicRefreshToken object with the provided token and sets the expiry
+     * Constructs a EicRefreshToken object with the provided token and sets the
+     * expiry
      * date to 300 days from the current date.
      * 
      * @param token The refresh token.
