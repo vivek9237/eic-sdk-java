@@ -57,6 +57,15 @@ public class EicClient {
 			}
 		});
 	}
+	public EicClient() throws Exception {
+		this(new HashMap<String, String>() {
+			{
+				put("tenant", "");
+				put("username", "");
+				put("password", "");
+			}
+		});
+	}
 
 	/**
 	 * Constructs an EicClient with the provided configurations.
