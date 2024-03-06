@@ -1,4 +1,4 @@
-package com.vivek9237.eic.restsdk;
+package com.github.vivek9237.eic.restsdk.utils;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -26,7 +26,8 @@ import java.time.Instant;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.github.vivek9237.eic.restsdk.core.EicRequest;
+import com.github.vivek9237.eic.restsdk.core.EicResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;

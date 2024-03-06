@@ -1,4 +1,4 @@
-package com.vivek9237.eic.restsdk;
+package com.github.vivek9237.eic.restsdk;
 
 import static org.junit.Assert.assertTrue;
 
