@@ -8,7 +8,7 @@ import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
  */
 public class EicRefreshToken {
     private String token;
-    private Date exipryDate;
+    private Date expiryDate;
 
     /**
      * Constructs a EicRefreshToken object with the provided token and sets the
@@ -19,7 +19,7 @@ public class EicRefreshToken {
      */
     public EicRefreshToken(String token) {
         this.token = token;
-        this.exipryDate = EicClientUtils.addDaysToDate(new Date(), 300);
+        this.expiryDate = EicClientUtils.addDaysToDate(new Date(), 300);
     }
 
     /**
@@ -28,9 +28,9 @@ public class EicRefreshToken {
      * @param token      The refresh token.
      * @param expiryDate The expiry date of the token.
      */
-    public EicRefreshToken(String token, Date exipryDate) {
+    public EicRefreshToken(String token, Date expiryDate) {
         this.token = token;
-        this.exipryDate = exipryDate;
+        this.expiryDate = expiryDate;
     }
 
     /**
@@ -57,6 +57,6 @@ public class EicRefreshToken {
      * @return The expiry date of the refresh token.
      */
     public Date getExpiryDate() {
-        return this.exipryDate;
+        return this.expiryDate;
     }
 }

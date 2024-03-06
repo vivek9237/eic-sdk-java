@@ -9,7 +9,7 @@ import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
  */
 public class EicAccessToken {
     private String token;
-    private Date exipryDate;
+    private Date expiryDate;
 
     /**
      * Constructs an AccessToken object with the provided token and expiry date.
@@ -17,9 +17,9 @@ public class EicAccessToken {
      * @param token      The access token.
      * @param expiryDate The expiry date of the token.
      */
-    public EicAccessToken(String token, Date exipryDate) {
+    public EicAccessToken(String token, Date expiryDate) {
         this.token = token;
-        this.exipryDate = exipryDate;
+        this.expiryDate = expiryDate;
     }
 
     /**
@@ -28,7 +28,7 @@ public class EicAccessToken {
      * @return true if the token is valid; otherwise false.
      */
     public Boolean isValid() {
-        return EicClientUtils.hasDatePassed(exipryDate, 5);
+        return EicClientUtils.hasDatePassed(expiryDate, 5);
     }
 
     /**
@@ -46,6 +46,6 @@ public class EicAccessToken {
      * @return The expiry date of the access token.
      */
     public Date getExpiryDate() {
-        return this.exipryDate;
+        return this.expiryDate;
     }
 }
