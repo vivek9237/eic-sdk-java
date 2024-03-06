@@ -15,10 +15,13 @@ import com.vivek9237.eic.restsdk.EicClient;
 public class App {
     public static void main( String[] args ) throws AuthenticationException, Exception
     {
+        // Creating an instance of the EicClient class with tenant, username, and password parameters
         EicClient eicClient = new EicClient("company-tenant","admin","strongestPassword");
         try {
+            // Attempting to retrieve user information for the username "admin"
             System.out.println(eicClient.getUserByUsername("admin"));
         } catch (IOException e) {
+            // Handling IOException by printing the stack trace
             e.printStackTrace();
         }
     }
