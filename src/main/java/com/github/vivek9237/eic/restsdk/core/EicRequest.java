@@ -1,6 +1,7 @@
-package com.vivek9237.eic.restsdk;
+package com.github.vivek9237.eic.restsdk.core;
 
 import java.util.Map;
+import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 
 public class EicRequest {
     private String url;

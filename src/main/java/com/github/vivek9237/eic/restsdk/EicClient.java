@@ -1,4 +1,4 @@
-package com.vivek9237.eic.restsdk;
+package com.github.vivek9237.eic.restsdk;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,13 +9,18 @@ import java.util.Map;
 import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
-public class EicClient {
+import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
+import com.github.vivek9237.eic.restsdk.core.EicRequest;
+import com.github.vivek9237.eic.restsdk.core.EicResponse;
+import com.github.vivek9237.eic.restsdk.core.EicRefreshToken;
+import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 
+public class EicClient {
 	private String EIC_BASE_URL;
 	private String EIC_USERNAME;
 	private String EIC_PASSWORD;
-	private AccessToken accessToken;
-	private RefreshToken refreshToken;
+	private EicAccessToken accessToken;
+	private EicRefreshToken refreshToken;
 	private Map<String, Object> eicRestApiConfig;
 
 	/**
@@ -77,7 +82,7 @@ public class EicClient {
 			EIC_USERNAME = username;
 			EIC_PASSWORD = password;
 		} else if (refreshToken != null) {
-			this.refreshToken = new RefreshToken(refreshToken,
+			this.refreshToken = new EicRefreshToken(refreshToken,
 					EicClientUtils.addDaysToDate(new Date(), refreshTokenExpiryDate));
 		} else {
 			throw new Exception("[username and password] or [refreshToken] is null.");
@@ -148,8 +153,8 @@ public class EicClient {
 			Integer expires_in = Integer.parseInt(eicResponse.getBodyAsJson().get("expires_in").getAsString());
 			Date exipryDate = EicClientUtils.addSecondsToDate(new Date(), expires_in);
 			String refresh_token = eicResponse.getBodyAsJson().get("refresh_token").getAsString();
-			this.accessToken = new AccessToken(access_token, exipryDate);
-			this.refreshToken = new RefreshToken(refresh_token);
+			this.accessToken = new EicAccessToken(access_token, exipryDate);
+			this.refreshToken = new EicRefreshToken(refresh_token);
 		}
 		return this.accessToken.getToken();
 	}
@@ -173,8 +178,8 @@ public class EicClient {
 			Integer expires_in = Integer.parseInt(eicResponse.getBodyAsJson().get("expires_in").getAsString());
 			Date exipryDate = EicClientUtils.addSecondsToDate(new Date(), expires_in);
 			String refresh_token = eicResponse.getBodyAsJson().get("refresh_token").getAsString();
-			this.accessToken = new AccessToken(access_token, exipryDate);
-			this.refreshToken = new RefreshToken(refresh_token);
+			this.accessToken = new EicAccessToken(access_token, exipryDate);
+			this.refreshToken = new EicRefreshToken(refresh_token);
 		}
 		return this.accessToken.getToken();
 	}

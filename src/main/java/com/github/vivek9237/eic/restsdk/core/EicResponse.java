@@ -1,9 +1,10 @@
-package com.vivek9237.eic.restsdk;
+package com.github.vivek9237.eic.restsdk.core;
 
 import java.util.Map;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 
 public class EicResponse {
     private final int responseCode;
