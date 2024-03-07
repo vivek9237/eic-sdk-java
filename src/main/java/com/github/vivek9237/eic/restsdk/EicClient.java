@@ -88,6 +88,9 @@ public class EicClient {
 		String username = configs.getOrDefault("username", null);
 		String password = configs.getOrDefault("password", null);
 		Integer refreshTokenExpiryDate = Integer.parseInt(configs.getOrDefault("refreshTokenExpiryDate", "300"));
+		if(EicClientUtils.isStringEmpty(tenant)){
+			throw new Exception("Tenant value cannot be null!");
+		}
 		EIC_BASE_URL = protocol + "://" + tenant + "." + domainName + ":" + port;
 		if (username != null && password != null) {
 			EIC_USERNAME = username;
