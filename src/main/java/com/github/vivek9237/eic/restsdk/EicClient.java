@@ -57,6 +57,7 @@ public class EicClient {
 			}
 		});
 	}
+
 	public EicClient() throws Exception {
 		this(new HashMap<String, String>() {
 			{
@@ -140,6 +141,7 @@ public class EicClient {
 	}
 
 	private Map<String, Object> getApiConfigMap(String category, String api) {
+		@SuppressWarnings("unchecked")
 		Map<String, Object> apiConfigMap = ((Map<String, Object>) ((Map<String, Object>) eicRestApiConfig.get(category))
 				.get(api));
 		return apiConfigMap;
@@ -150,6 +152,7 @@ public class EicClient {
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = "{\"username\":\"" + EIC_USERNAME + "\",\"password\":\"" + EIC_PASSWORD + "\"}";
+		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		EicResponse eicResponse = EicClientUtils.sendRequest(apiUrl, method, headers, requestBody);
 		if (eicResponse.getResponseCode() == 401) {
@@ -175,6 +178,7 @@ public class EicClient {
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = "grant_type=" + URLEncoder.encode("refresh_token", "UTF-8") + "&refresh_token="
 				+ URLEncoder.encode(this.refreshToken.getToken(), "UTF-8");
+		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		EicResponse eicResponse = EicClientUtils.sendRequest(apiUrl, method, headers, requestBody);
 		if (eicResponse.getResponseCode() == 401) {
@@ -194,6 +198,7 @@ public class EicClient {
 		return this.accessToken.getToken();
 	}
 
+	/* Get Users */
 	/**
 	 * Retrieves user details by username.
 	 * 
@@ -227,6 +232,7 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getAllUsers(Map<String, Object> body)
 			throws AuthenticationException, IOException, Exception {
 		List<Map<String, Object>> userDetailsList = new ArrayList<>();
@@ -287,6 +293,7 @@ public class EicClient {
 		return userDetailsList;
 	}
 
+	@SuppressWarnings("unchecked")
 	private List<Map<String, Object>> getUsers(Map<String, Object> body) throws Exception {
 		List<Map<String, Object>> userDetailsList;
 		Map<String, Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
@@ -313,11 +320,11 @@ public class EicClient {
 
 	private EicResponse getUsers(Map<String, Object> body, Boolean test)
 			throws AuthenticationException, IOException, Exception {
-		List<Map<String, Object>> userDetailsList;
 		Map<String, Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = EicJsonUtils.convertMapToJsonString(body);
+		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
@@ -329,6 +336,7 @@ public class EicClient {
 		}
 	}
 
+	/* Create Users */
 	/**
 	 * Creates a new user with the provided parameters.
 	 * 
@@ -385,6 +393,7 @@ public class EicClient {
 		return eicResponse.getBody();
 	}
 
+	/* Get DataValues */
 	/**
 	 * Retrieves values associated with the specified dataset.
 	 * 
@@ -395,6 +404,7 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getDatasetValues(String datasetName)
 			throws AuthenticationException, IOException, Exception {
 		List<Map<String, Object>> datasetValues;
@@ -416,6 +426,7 @@ public class EicClient {
 		Map<String, Object> apiConfig = getApiConfigMap("Datasets", "Get_Dataset_Values");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL") + "?" + EicClientUtils.convertToQueryParameters(body);
 		String method = (String) apiConfig.get("METHOD");
+		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, null);
@@ -427,10 +438,11 @@ public class EicClient {
 		}
 	}
 
+	/* Get Accounts */
 	/**
-	 * Retrieves accounts associated with the specified username.
+	 * Retrieves all accounts associated with the specified username.
 	 * 
-	 * @param username The username to retrieve accounts for.
+	 * @param username The username of the user to retrieve accounts for.
 	 * @return A list of maps containing account details.
 	 * @throws AuthenticationException If authentication fails.
 	 * @throws IOException             If an I/O error occurs.
@@ -439,13 +451,41 @@ public class EicClient {
 	 */
 	public List<Map<String, Object>> getAccounts(String username)
 			throws AuthenticationException, IOException, Exception {
-		return getAccounts(username, null);
+		return getAccounts(new HashMap<String, Object>() {
+			{
+				put("username", username);
+			};
+		});
 	}
 
 	/**
-	 * Retrieves accounts associated with the specified username and endpoint name.
+	 * Retrieves accounts associated with the specified username, and status.
 	 * 
-	 * @param username     The username to retrieve accounts for.
+	 * @param username The username of the user to retrieve accounts for.
+	 * @param active   Specifies whether to retrieve active or inactive accounts.
+	 * @return A list of maps containing account details.
+	 * @throws AuthenticationException If authentication fails.
+	 * @throws IOException             If an I/O error occurs.
+	 * @throws Exception               If an error occurs during the retrieval
+	 *                                 process.
+	 */
+	public List<Map<String, Object>> getAccounts(String username, Boolean active)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("username", username);
+		body.put("advsearchcriteria", new HashMap<String, String>() {
+			{
+				put("status", active ? "ACTIVE" : "INACTIVE");
+			};
+		});
+		return getAccounts(body);
+	}
+
+	/**
+	 * Retrieves all accounts associated with the specified username and endpoint
+	 * name.
+	 * 
+	 * @param username     The username of the user to retrieve accounts for.
 	 * @param endpointName The endpoint name for filtering accounts.
 	 * @return A list of maps containing account details.
 	 * @throws AuthenticationException If authentication fails.
@@ -455,14 +495,17 @@ public class EicClient {
 	 */
 	public List<Map<String, Object>> getAccounts(String username, String endpointName)
 			throws AuthenticationException, IOException, Exception {
-		return getAccounts(username, endpointName, true);
+		Map<String, Object> body = new HashMap<String, Object>();
+		body.put("username", username);
+		body.put("endpoint", endpointName);
+		return getAccounts(body);
 	}
 
 	/**
 	 * Retrieves accounts associated with the specified username, endpoint name, and
 	 * active status.
 	 * 
-	 * @param username     The username to retrieve accounts for.
+	 * @param username     The username of the user to retrieve accounts for.
 	 * @param endpointName The endpoint name for filtering accounts.
 	 * @param active       Specifies whether to retrieve active accounts.
 	 * @return A list of maps containing account details.
@@ -478,7 +521,7 @@ public class EicClient {
 		body.put("endpoint", endpointName);
 		body.put("advsearchcriteria", new HashMap<String, String>() {
 			{
-				put("status", "ACTIVE");
+				put("status", active ? "ACTIVE" : "INACTIVE");
 			};
 		});
 		return getAccounts(body);
@@ -495,6 +538,7 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Map<String, Object>> getAccounts(Map<String, Object> body)
 			throws AuthenticationException, IOException, Exception {
 		List<Map<String, Object>> accounts = null;
@@ -512,11 +556,11 @@ public class EicClient {
 
 	private EicResponse getAccounts(Map<String, Object> body, Boolean test)
 			throws AuthenticationException, IOException, Exception {
-		List<Map<String, Object>> userDetailsList;
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Get_Account_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = EicJsonUtils.convertMapToJsonString(body);
+		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
