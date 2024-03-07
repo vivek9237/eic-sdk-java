@@ -35,6 +35,6 @@ public class AppTest {
     public void testGetDatasetValues() throws Exception {
         EicClient eicClient = new EicClient(envVariables.get("EIC_TENANT"), envVariables.get("EIC_USERNAME"),
                 envVariables.get("EIC_PASSWORD"));
-        assertTrue(eicClient.getDatasetValues("REPLACE_MAPPINGS").size() > 0);
+        assertTrue(eicClient.getDatasetValues("REPLACE_MAPPING").size() > 0);
     }
 }
