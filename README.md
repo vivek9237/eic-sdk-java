@@ -52,6 +52,9 @@ public class App {
 
 - Add ways to securely pass credentials
 
+## Contributing
+
+Please read [CONTRIBUTING.md](https://github.com/vivek9237/eic-rest-sdk/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
