@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.vivek9237.eic.restsdk</groupId>
-  <artifactId>eic-rest-sdk</artifactId>
+  <artifactId>eic-sdk-java</artifactId>
   <packaging>jar</packaging>
   <version>1.0</version>
-  <name>eic-rest-sdk</name>
+  <name>eic-sdk-java</name>
   <!-- FIXME change it to the project's website -->
-  <url>https://github.com/vivek9237/eic-rest-sdk</url>
+  <url>https://github.com/vivek9237/eic-sdk-java</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -59,7 +59,7 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>eic-rest-sdk</finalName>
+    <finalName>eic-sdk-java</finalName>
     <pluginManagement>      <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->

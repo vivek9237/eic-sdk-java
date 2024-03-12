@@ -34,7 +34,7 @@ jobs:
     - run: mkdir staging && cp target/*.jar staging
     - uses: actions/upload-artifact@v3
       with:
-        name: eic-rest-sdk.jar
+        name: eic-sdk-java.jar
         path: staging
   publish_javadoc:
     runs-on: ubuntu-latest

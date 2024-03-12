@@ -4,7 +4,7 @@
 This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
 
 ## Documentation
-- [Javadoc](https://vivek9237.github.io/eic-rest-sdk/javadoc/)
+- [Javadoc](https://vivek9237.github.io/eic-sdk-java/javadoc/)
 
 ## Environment Variables
 To run this project, you will need to add the following environment variables to your .env file
@@ -54,15 +54,15 @@ public class App {
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/vivek9237/eic-rest-sdk/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://github.com/vivek9237/eic-sdk-java/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
 
 - [@vivek9237](https://www.github.com/vivek9237)
 
-See also the list of [contributors](https://github.com/vivek9237/eic-rest-sdk/graphs/contributors) who have participated in this project.
+See also the list of [contributors](https://github.com/vivek9237/eic-sdk-java/graphs/contributors) who have participated in this project.
 
 ## Feedback
 We value your input! If you have any feedback, suggestions, or comments, please don't hesitate to share them with us. You can reach out to us at vivek.ku.mohanty@gmail.com.
 
-If you encounter any bugs or would like to request a new feature, please consider raising an issue on our GitHub repository: [EIC REST SDK - Bugs and Features](https://github.com/vivek9237/eic-rest-sdk/issues)
+If you encounter any bugs or would like to request a new feature, please consider raising an issue on our GitHub repository: [EIC REST SDK - Bugs and Features](https://github.com/vivek9237/eic-sdk-java/issues)

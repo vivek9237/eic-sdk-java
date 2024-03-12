@@ -90,7 +90,7 @@ nb-configuration.xml
 *.log
 
 ##############################
-## EIC-REST-SDK
+## eic-sdk-java
 ##############################
 App.java
 credentials.yml
