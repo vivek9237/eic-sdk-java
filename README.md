@@ -2,10 +2,22 @@
 
 ## About
 This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by directly using EIC v5 API features.
+
 ## Javadoc
 https://vivek9237.github.io/eic-rest-sdk/javadoc/
+
+## Environment Variables
+To run this project, you will need to add the following environment variables to your .env file
+
+`EIC_TENANT` EIC tenant name
+
+`EIC_USERNAME` EIC username with appropriate permissions
+
+`EIC_PASSWORD` EIC user's password
+
+
 ## Sample SDK Usage
-Sample Java program -
+### Sample Java program
 
 App.java
 ```Java
@@ -26,3 +38,7 @@ public class App {
     }
 }
 ```
+
+## Feedback
+
+If you have any feedback, please reach out to us at vivek.ku.mohanty@gmail.com
