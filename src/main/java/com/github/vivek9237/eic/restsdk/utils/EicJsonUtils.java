@@ -104,6 +104,7 @@ public class EicJsonUtils {
 
     private static List<Object> convertJsonNodeToList(JsonNode jsonNode) {
         ObjectMapper objectMapper = new ObjectMapper();
+        @SuppressWarnings("unchecked")
         List<Object> resultList = objectMapper.convertValue(jsonNode, List.class);
         // Handle nested structures within the list
         for (int i = 0; i < resultList.size(); i++) {

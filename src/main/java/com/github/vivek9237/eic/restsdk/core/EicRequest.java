@@ -1,7 +1,6 @@
 package com.github.vivek9237.eic.restsdk.core;
 
 import java.util.Map;
-import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
 
 /**
