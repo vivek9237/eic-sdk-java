@@ -65,4 +65,6 @@ See also the list of [contributors](https://github.com/vivek9237/eic-sdk-java/gr
 ## Feedback
 We value your input! If you have any feedback, suggestions, or comments, please don't hesitate to share them with us. You can reach out to us at vivek.ku.mohanty@gmail.com.
 
-If you encounter any bugs or would like to request a new feature, please consider raising an issue on our GitHub repository: [EIC REST SDK - Bugs and Features](https://github.com/vivek9237/eic-sdk-java/issues)
+If you encounter any bugs, please report them by creating an issue here - [Report Bugs](https://github.com/vivek9237/eic-sdk-java/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=)
+
+If you have a feature request, feel free to submit it here - [Request New Features](https://github.com/vivek9237/eic-sdk-java/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=)
