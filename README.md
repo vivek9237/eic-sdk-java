@@ -57,6 +57,9 @@ public class App {
 
 - [@vivek9237](https://www.github.com/vivek9237)
 
-## Feedback
+See also the list of [contributors](https://github.com/vivek9237/eic-rest-sdk/graphs/contributors) who have participated in this project.
 
-If you have any feedback, please reach out to us at vivek.ku.mohanty@gmail.com
+## Feedback
+We value your input! If you have any feedback, suggestions, or comments, please don't hesitate to share them with us. You can reach out to us at vivek.ku.mohanty@gmail.com.
+
+If you encounter any bugs or would like to request a new feature, please consider raising an issue on our GitHub repository: [EIC REST SDK - Bugs and Features](https://github.com/vivek9237/eic-rest-sdk/issues)
