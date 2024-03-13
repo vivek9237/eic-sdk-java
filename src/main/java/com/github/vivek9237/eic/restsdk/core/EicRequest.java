@@ -1,5 +1,6 @@
 package com.github.vivek9237.eic.restsdk.core;
 
+import java.util.HashMap;
 import java.util.Map;
 import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
 
@@ -71,7 +72,10 @@ public class EicRequest {
      */
     @Override
     public String toString() {
-        return "[url=" + url + ", method=" + method + ", headers=" + EicJsonUtils.mapToString(headers) + ", body="
+        // Convert the original map to a new map of type Map<String, Object>
+        Map<String, Object> objectMap = new HashMap<>();
+        headers.forEach((key, value) -> objectMap.put(key, value));
+        return "[url=" + url + ", method=" + method + ", headers=" + EicJsonUtils.mapToJsonObjectString(objectMap) + ", body="
                 + body + "]";
     }
 }

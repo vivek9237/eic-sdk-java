@@ -1,5 +1,6 @@
 package com.github.vivek9237.eic.restsdk.core;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
@@ -78,7 +79,10 @@ public class EicResponse {
      */
     @Override
     public String toString() {
-        return "[responseCode=" + responseCode + ", headers=" + EicJsonUtils.mapToString(headers) + ", body=" + body
+        // Convert the original map to a new map of type Map<String, Object>
+        Map<String, Object> objectMap = new HashMap<>();
+        headers.forEach((key, value) -> objectMap.put(key, value));
+        return "[responseCode=" + responseCode + ", headers=" + EicJsonUtils.mapToJsonObjectString(objectMap) + ", body=" + body
                 + "]";
     }
 }

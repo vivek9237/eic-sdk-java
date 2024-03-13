@@ -1,19 +1,19 @@
 package com.github.vivek9237.eic.restsdk.utils;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.JsonParser;
 
 public class EicJsonUtils {
+    private static final Gson gson = new Gson();
+
     /**
      * Converts a JsonObject to a Map.
      * 
@@ -29,90 +29,98 @@ public class EicJsonUtils {
     }
 
     /**
-     * Converts a Map to a String representation.
+     * Converts a Map to a JSON string representing a JSONObject.
      * 
-     * @param map The Map to convert.
-     * @return The String representation of the Map.
+     * @param map The Map to be converted.
+     * @return A JSON string representing a JSONObject.
      */
-    public static String mapToString(Map<String, ?> map) {
-        String mapAsString = map.keySet().stream()
-                .map(key -> key + "=" + map.get(key))
-                .collect(Collectors.joining(", ", "{", "}"));
-        return mapAsString;
+    public static String mapToJsonObjectString(Map<String, Object> map) {
+        return gson.toJson(map);
     }
 
     /**
-     * Converts a Map to a JSON string.
+     * Converts a List to a JSON string representing a JSONArray.
      * 
-     * @param map The Map to convert.
-     * @return The JSON string representation of the Map.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
+     * @param list The List to be converted.
+     * @return A JSON string representing a JSONArray.
      */
-    public static String convertMapToJsonString(Map<String, Object> map) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(map);
+    public static String listToJsonArrayString(List<Object> list) {
+        return gson.toJson(list);
     }
 
     /**
-     * Converts a List to a JSON string.
+     * Converts a JSON string representing a JSONObject to a Java Map.
      * 
-     * @param list The List to convert.
-     * @return The JSON string representation of the List.
-     * @throws JsonProcessingException If an error occurs during JSON processing.
+     * @param jsonObjectString The JSON string representing a JSONObject.
+     * @return A Map representing the JSON object.
      */
-    public static String convertListToJsonString(List<Object> list) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(list);
+    public static Map<String, Object> jsonObjectStringToMap(String jsonObjectString) {
+        Type type = new TypeToken<Map<String, Object>>() {
+        }.getType();
+        return gson.fromJson(jsonObjectString, type);
     }
 
     /**
-     * Converts a JSON string to a Map.
+     * Converts a JSON string representing a JSONArray to a Java List.
      * 
-     * @param jsonString The JSON string to convert.
-     * @return The resulting Map.
+     * @param jsonArrayString The JSON string representing a JSONArray.
+     * @return A List representing the JSON array.
      */
-    public static Map<String, Object> jsonToMap(String jsonString) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(jsonString);
-            return convertJsonNodeToMap(jsonNode);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    public static List<Object> jsonArrayStringToList(String jsonArrayString) {
+        Type type = new TypeToken<List<Object>>() {
+        }.getType();
+        return gson.fromJson(jsonArrayString, type);
+    }
+
+    /**
+     * Converts a JSON string to a JsonObject.
+     * 
+     * @param jsonString The JSON string to be converted.
+     * @return A JsonObject representing the JSON.
+     * @throws IllegalArgumentException If the input is not a valid JSON object.
+     */
+    public static JsonObject jsonStringToJsonObject(String jsonString) {
+        JsonElement jsonElement = JsonParser.parseString(jsonString);
+        if (jsonElement instanceof JsonObject) {
+            return jsonElement.getAsJsonObject();
+        } else {
+            throw new IllegalArgumentException("Input is not a JSON object.");
         }
     }
 
-    private static Map<String, Object> convertJsonNodeToMap(JsonNode jsonNode) {
-        Map<String, Object> resultMap = new HashMap<>();
-        jsonNode.fields().forEachRemaining(entry -> {
-            String key = entry.getKey();
-            JsonNode value = entry.getValue();
-            if (value.isObject()) {
-                // Recursively convert nested objects
-                resultMap.put(key, convertJsonNodeToMap(value));
-            } else if (value.isArray()) {
-                // Convert arrays to List
-                resultMap.put(key, convertJsonNodeToList(value));
-            } else {
-                // Handle other types
-                resultMap.put(key, value.asText());
-            }
-        });
-
-        return resultMap;
+    /**
+     * Converts a JSON string to a JsonArray.
+     * 
+     * @param jsonString The JSON string to be converted.
+     * @return A JsonArray representing the JSON.
+     * @throws IllegalArgumentException If the input is not a valid JSON array.
+     */
+    public static JsonArray jsonStringToJsonArray(String jsonString) {
+        JsonElement jsonElement = JsonParser.parseString(jsonString);
+        if (jsonElement instanceof JsonArray) {
+            return jsonElement.getAsJsonArray();
+        } else {
+            throw new IllegalArgumentException("Input is not a JSON array.");
+        }
     }
 
-    private static List<Object> convertJsonNodeToList(JsonNode jsonNode) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        @SuppressWarnings("unchecked")
-        List<Object> resultList = objectMapper.convertValue(jsonNode, List.class);
-        // Handle nested structures within the list
-        for (int i = 0; i < resultList.size(); i++) {
-            Object element = resultList.get(i);
-            if (element instanceof JsonNode) {
-                resultList.set(i, convertJsonNodeToMap((JsonNode) element));
-            }
-        }
-        return resultList;
+    /**
+     * Converts a JsonObject to a JSON string.
+     * 
+     * @param jsonObject The JsonObject to be converted.
+     * @return A JSON string representing the JsonObject.
+     */
+    public static String jsonObjectToJsonString(JsonObject jsonObject) {
+        return jsonObject.toString();
+    }
+
+    /**
+     * Converts a JsonArray to a JSON string.
+     * 
+     * @param jsonArray The JsonArray to be converted.
+     * @return A JSON string representing the JsonArray.
+     */
+    public static String jsonArrayToJsonString(JsonArray jsonArray) {
+        return jsonArray.toString();
     }
 }
