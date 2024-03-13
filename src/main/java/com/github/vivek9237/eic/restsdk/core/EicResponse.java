@@ -65,7 +65,7 @@ public class EicResponse {
     public JsonObject getBodyAsJson() {
         JsonObject jsonObject;
         if (!EicClientUtils.isStringEmpty(body)) {
-            jsonObject = JsonParser.parseString(body).getAsJsonObject();
+            jsonObject = EicJsonUtils.jsonStringToJsonObject(body);
         } else {
             jsonObject = null;
         }

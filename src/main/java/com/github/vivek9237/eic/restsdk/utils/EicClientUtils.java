@@ -123,8 +123,8 @@ public class EicClientUtils {
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String header = new String(decoder.decode(chunks[0]));
         String payload = new String(decoder.decode(chunks[1]));
-        JsonObject headerJsonObj = JsonParser.parseString(header).getAsJsonObject();
-        JsonObject payloadJsonObj = JsonParser.parseString(payload).getAsJsonObject();
+        JsonObject headerJsonObj = EicJsonUtils.jsonStringToJsonObject(header);
+        JsonObject payloadJsonObj = EicJsonUtils.jsonStringToJsonObject(payload);
         jwtMap.put("header", headerJsonObj);
         jwtMap.put("payload", payloadJsonObj);
         return jwtMap;
