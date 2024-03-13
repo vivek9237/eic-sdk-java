@@ -1,0 +1,45 @@
+{
+	"Authentication": {
+		"Get_Authorization_Token": {
+			"URL": "/ECM/api/login",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		},
+		"Refresh_Authorization_Token": {
+			"URL": "/ECM/oauth/access_token",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		}
+	},
+	"Users": {
+		"Get_User_Details": {
+			"URL": "/ECM/api/v5/getUser",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		}
+	},
+	"Datasets": {
+		"Get_Dataset_Values": {
+			"URL": "/ECM/api/v5/getDatasetValues",
+			"METHOD": "GET",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		}
+	},
+	"Accounts": {
+		"Get_Account_Details": {
+			"URL": "/ECM/api/v5/getAccounts",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		}
+	}
+}

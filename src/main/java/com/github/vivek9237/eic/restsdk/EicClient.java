@@ -101,7 +101,7 @@ public class EicClient {
 		} else {
 			throw new Exception("[username and password] or [refreshToken] is null.");
 		}
-		eicRestApiConfig = EicClientUtils.parseYamlFile("/eic_rest_api.yml");
+		eicRestApiConfig = EicJsonUtils.parseJsonFileToMap("/eic_rest_api.json");
 	}
 
 	/**

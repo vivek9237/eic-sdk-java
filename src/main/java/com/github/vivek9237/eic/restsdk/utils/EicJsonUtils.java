@@ -1,8 +1,13 @@
 package com.github.vivek9237.eic.restsdk.utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -122,5 +127,31 @@ public class EicJsonUtils {
      */
     public static String jsonArrayToJsonString(JsonArray jsonArray) {
         return jsonArray.toString();
+    }
+
+    /**
+     * Parses a JSON file located at the specified file path and returns its
+     * contents as a Map&lt;String, Object&gt;.
+     * 
+     * @param filePath The path to the JSON file relative to the classpath.
+     * @return A Map containing the parsed JSON data, where keys are strings and
+     *         values are objects.
+     * @throws NullPointerException If the file path is null or if the file does not
+     *                              exist.
+     */
+    public static Map<String, Object> parseJsonFileToMap(String filePath) {
+        InputStream inputStream = EicClientUtils.class.getResourceAsStream(filePath);
+        return jsonObjectStringToMap(convertInputStreamToString(inputStream));
+    }
+
+    // Method to convert InputStream to String
+    private static String convertInputStreamToString(InputStream inputStream) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
+            // Use Java 8's Stream API to read the lines and join them into a single string
+            return br.lines().collect(Collectors.joining());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
