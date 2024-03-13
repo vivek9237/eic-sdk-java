@@ -1,9 +1,7 @@
 package com.github.vivek9237.eic.restsdk.utils;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -17,9 +15,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.yaml.snakeyaml.Yaml;
-
 import java.time.Instant;
 
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
@@ -198,20 +193,6 @@ public class EicClientUtils {
         calendar.setTime(date);
         calendar.add(Calendar.SECOND, seconds);
         return calendar.getTime();
-    }
-
-    /**
-     * Parses a YAML file and returns its contents as a Map.
-     * 
-     * @param filePath The path to the YAML file.
-     * @return The contents of the YAML file as a Map.
-     * @throws FileNotFoundException If the specified file is not found.
-     */
-    public static Map<String, Object> parseYamlFile(String filePath) throws FileNotFoundException {
-        // InputStream inputStream = new FileInputStream(filePath);
-        InputStream inputStream = EicClientUtils.class.getResourceAsStream(filePath);
-        Yaml yaml = new Yaml();
-        return yaml.load(inputStream);
     }
 
     /**
