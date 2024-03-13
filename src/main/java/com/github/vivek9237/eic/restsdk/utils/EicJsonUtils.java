@@ -85,7 +85,7 @@ public class EicJsonUtils {
      * @throws IllegalArgumentException If the input is not a valid JSON object.
      */
     public static JsonObject jsonStringToJsonObject(String jsonString) {
-        JsonElement jsonElement = JsonParser.parseString(jsonString);
+        JsonElement jsonElement = new JsonParser().parse(jsonString);
         if (jsonElement instanceof JsonObject) {
             return jsonElement.getAsJsonObject();
         } else {
@@ -101,7 +101,7 @@ public class EicJsonUtils {
      * @throws IllegalArgumentException If the input is not a valid JSON array.
      */
     public static JsonArray jsonStringToJsonArray(String jsonString) {
-        JsonElement jsonElement = JsonParser.parseString(jsonString);
+        JsonElement jsonElement = new JsonParser().parse(jsonString);
         if (jsonElement instanceof JsonArray) {
             return jsonElement.getAsJsonArray();
         } else {
