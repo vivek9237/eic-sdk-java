@@ -88,7 +88,7 @@ public class EicClient {
 		String username = configs.getOrDefault("username", null);
 		String password = configs.getOrDefault("password", null);
 		Integer refreshTokenExpiryDate = Integer.parseInt(configs.getOrDefault("refreshTokenExpiryDate", "300"));
-		if(EicClientUtils.isStringEmpty(tenant)){
+		if (EicClientUtils.isStringEmpty(tenant)) {
 			throw new Exception("Tenant value cannot be null!");
 		}
 		EIC_BASE_URL = protocol + "://" + tenant + "." + domainName + ":" + port;
@@ -248,13 +248,15 @@ public class EicClient {
 		}
 		EicResponse eicResponse = getUsers(body, true);
 		if (eicResponse != null && eicResponse.getResponseCode() == 200) {
-			Object userDetailsObj = EicJsonUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
+			// Object userDetailsObj =
+			// EicJsonUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
+			Object userDetailsObj = EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody()).get("userdetails");
 			if (userDetailsObj != null && userDetailsObj instanceof Map) {
 				userDetailsList.add((Map<String, Object>) userDetailsObj);
 			} else if (userDetailsObj != null && userDetailsObj instanceof List) {
 				Integer totalCount = Integer.parseInt(eicResponse.getBodyAsJson().get("totalcount").getAsString());
 				Integer displaycount = Integer.parseInt(eicResponse.getBodyAsJson().get("displaycount").getAsString());
-				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonToMap(eicResponse.getBody())
+				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
 						.get("userdetails");
 				if (totalCount > displaycount && userDetailsList != null && userDetailsList.size() > 0) {
 					while (true) {
@@ -264,7 +266,7 @@ public class EicClient {
 								.parseInt(eicResponseSubsequent.getBodyAsJson().get("displaycount").getAsString());
 						if (displaycount != 0) {
 							userDetailsList.addAll((List<Map<String, Object>>) EicJsonUtils
-									.jsonToMap(eicResponse.getBody()).get("userdetails"));
+									.jsonObjectStringToMap(eicResponse.getBody()).get("userdetails"));
 						} else {
 							break;
 						}
@@ -273,7 +275,7 @@ public class EicClient {
 			} else {
 				Integer totalCount = Integer.parseInt(eicResponse.getBodyAsJson().get("totalcount").getAsString());
 				Integer displaycount = Integer.parseInt(eicResponse.getBodyAsJson().get("displaycount").getAsString());
-				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonToMap(eicResponse.getBody())
+				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
 						.get("userlist");
 				if (totalCount > displaycount && userDetailsList != null && userDetailsList.size() > 0) {
 					while (true) {
@@ -283,7 +285,7 @@ public class EicClient {
 								.parseInt(eicResponseSubsequent.getBodyAsJson().get("displaycount").getAsString());
 						if (displaycount != 0) {
 							userDetailsList.addAll((List<Map<String, Object>>) EicJsonUtils
-									.jsonToMap(eicResponse.getBody()).get("userlist"));
+									.jsonObjectStringToMap(eicResponse.getBody()).get("userlist"));
 						} else {
 							break;
 						}
@@ -296,23 +298,27 @@ public class EicClient {
 		return userDetailsList;
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+     * This method is deprecated and should not be used anymore.
+     */
+    @Deprecated
+	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Map<String, Object>> getUsers(Map<String, Object> body) throws Exception {
 		List<Map<String, Object>> userDetailsList;
 		Map<String, Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
-		String requestBody = EicJsonUtils.convertMapToJsonString(body);
+		String requestBody = EicJsonUtils.mapToJsonObjectString(body);
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
 		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
-			Object userDetailsObj = EicJsonUtils.jsonToMap(eicResponse.getBody()).get("userdetails");
+			Object userDetailsObj = EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody()).get("userdetails");
 			if (userDetailsObj != null) {
 				userDetailsList = (List<Map<String, Object>>) userDetailsObj;
 			} else {
-				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonToMap(eicResponse.getBody())
+				userDetailsList = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
 						.get("userlist");
 			}
 		} else {
@@ -326,7 +332,7 @@ public class EicClient {
 		Map<String, Object> apiConfig = getApiConfigMap("Users", "Get_User_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
-		String requestBody = EicJsonUtils.convertMapToJsonString(body);
+		String requestBody = EicJsonUtils.mapToJsonObjectString(body);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
@@ -416,7 +422,7 @@ public class EicClient {
 		EicResponse eicResponse = getDatasetValues(body);
 		Integer errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsInt();
 		if (errorCode == 0) {
-			datasetValues = (List<Map<String, Object>>) EicJsonUtils.jsonToMap(eicResponse.getBody())
+			datasetValues = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
 					.get("dataset_values");
 		} else {
 			throw new Exception(eicResponse.getBodyAsJson().get("msg").toString());
@@ -549,7 +555,7 @@ public class EicClient {
 		String errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsString();
 		System.out.println(errorCode);
 		if (errorCode.equals("0")) {
-			accounts = (List<Map<String, Object>>) EicJsonUtils.jsonToMap(eicResponse.getBody())
+			accounts = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
 					.get("Accountdetails");
 		} else {
 			throw new Exception(eicResponse.getBodyAsJson().get("msg").getAsString());
@@ -562,7 +568,7 @@ public class EicClient {
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Get_Account_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
-		String requestBody = EicJsonUtils.convertMapToJsonString(body);
+		String requestBody = EicJsonUtils.mapToJsonObjectString(body);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
