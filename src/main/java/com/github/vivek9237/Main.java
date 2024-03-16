@@ -5,7 +5,7 @@ import com.github.vivek9237.security.EicEncryptionUtils;
 public class Main {
     public static void main(String[] args) throws Exception {
         if (args.length == 0) {
-            System.out.println("Usage: java Main [function]");
+            System.out.println("Usage: `java jar eic-sdk-java.jar [function]`");
             System.out.println("Available functions:");
             System.out.println("1. `generatekey` - Generates a secret key");
             System.out.println("2. `encrypt` - Encrypt a string");
@@ -35,7 +35,7 @@ public class Main {
                 break;
             case "encrypt":
                 if (args.length < 3) {
-                    System.out.println("Usage: java Main encrypt [inputString] [secretKey]");
+                    System.out.println("Usage: `java jar eic-sdk-java.jar encrypt [inputString] [secretKey]`");
                     return;
                 }
                 try {
@@ -49,7 +49,7 @@ public class Main {
                 break;
             case "decrypt":
                 if (args.length < 3) {
-                    System.out.println("Usage: java Main decrypt [encryptedString] [secretKey]");
+                    System.out.println("Usage: `java jar eic-sdk-java.jar decrypt [encryptedString] [secretKey]`");
                     return;
                 }
                 try {
