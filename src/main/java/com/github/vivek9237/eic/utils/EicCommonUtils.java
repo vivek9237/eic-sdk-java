@@ -9,7 +9,6 @@ public class EicCommonUtils {
         Properties props=new Properties();
         FileReader reader=new FileReader(path);
         props.load(reader);
-        props.getProperty("Key");
         return props;
     }
 }
