@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
 import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
 

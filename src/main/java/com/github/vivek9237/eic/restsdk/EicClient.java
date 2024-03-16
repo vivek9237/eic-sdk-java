@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
@@ -15,6 +16,8 @@ import com.github.vivek9237.eic.restsdk.core.EicResponse;
 import com.github.vivek9237.eic.restsdk.core.EicRefreshToken;
 import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
+import com.github.vivek9237.eic.utils.EicCommonUtils;
+import com.github.vivek9237.security.EicEncryptionUtils;
 
 public class EicClient {
 	private String EIC_BASE_URL;
@@ -61,9 +64,12 @@ public class EicClient {
 	public EicClient() throws Exception {
 		this(new HashMap<String, String>() {
 			{
-				put("tenant", "");
-				put("username", "");
-				put("password", "");
+				String eicPropertiesFile = (String)EicJsonUtils.parseJsonFileToMap("/properties.json").get("eic_properties_file_name");
+				Properties prop = EicCommonUtils.readPropertyFile(eicPropertiesFile);
+				put("tenant", prop.getProperty("com.github.vivek9237.eic.tenant"));
+				put("username", prop.getProperty("com.github.vivek9237.eic.username"));
+				String password = EicEncryptionUtils.decrypt(prop.getProperty("com.github.vivek9237.eic.password"), prop.getProperty("com.github.vivek9237.eic.secret"));
+				put("password", password);
 			}
 		});
 	}

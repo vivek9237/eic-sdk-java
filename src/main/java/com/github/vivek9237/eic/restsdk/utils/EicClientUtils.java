@@ -20,7 +20,6 @@ import java.time.Instant;
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class EicClientUtils {
     /**
