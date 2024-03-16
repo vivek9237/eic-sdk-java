@@ -26,11 +26,6 @@ public class AppTest {
         assertTrue(eicClient.getAccessToken().length() > 0);
     }
     @Test
-    public void testGetAccessToken1() throws Exception {
-        EicClient eicClient = new EicClient();
-        assertTrue(eicClient.getAccessToken().length() > 0);
-    }
-    @Test
     public void testGetUserByUsername() throws Exception {
         EicClient eicClient = new EicClient(envVariables.get("EIC_TENANT"), envVariables.get("EIC_USERNAME"),
                 envVariables.get("EIC_PASSWORD"));
