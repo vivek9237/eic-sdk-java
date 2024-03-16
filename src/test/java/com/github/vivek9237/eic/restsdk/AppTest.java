@@ -25,7 +25,11 @@ public class AppTest {
                 envVariables.get("EIC_PASSWORD"));
         assertTrue(eicClient.getAccessToken().length() > 0);
     }
-
+    @Test
+    public void testGetAccessToken1() throws Exception {
+        EicClient eicClient = new EicClient();
+        assertTrue(eicClient.getAccessToken().length() > 0);
+    }
     @Test
     public void testGetUserByUsername() throws Exception {
         EicClient eicClient = new EicClient(envVariables.get("EIC_TENANT"), envVariables.get("EIC_USERNAME"),
@@ -43,11 +47,8 @@ public class AppTest {
     public void testEncryptionAndDecryption() throws Exception{
         String secret = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
         String generatedSecret = EicEncryptionUtils.encodeKeyToString(EicEncryptionUtils.generateSecretKey());
-        System.out.println(generatedSecret);
         String encryptedString = EicEncryptionUtils.encrypt(secret, generatedSecret);
-        System.out.println(encryptedString);
         String decryptedString = EicEncryptionUtils.decrypt(encryptedString, generatedSecret);
-        System.out.println(decryptedString);
         assertTrue(secret.equals(decryptedString));
     }
 }
