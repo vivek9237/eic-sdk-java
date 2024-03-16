@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import com.github.vivek9237.security.EicEncryptionUtils;
+
 /**
  * Unit test for simple App.
  */
@@ -36,5 +38,16 @@ public class AppTest {
         EicClient eicClient = new EicClient(envVariables.get("EIC_TENANT"), envVariables.get("EIC_USERNAME"),
                 envVariables.get("EIC_PASSWORD"));
         assertTrue(eicClient.getDatasetValues("REPLACE_MAPPING").size() > 0);
+    }
+    @Test
+    public void testEncryptionAndDecryption() throws Exception{
+        String secret = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+        String generatedSecret = EicEncryptionUtils.encodeKeyToString(EicEncryptionUtils.generateSecretKey());
+        System.out.println(generatedSecret);
+        String encryptedString = EicEncryptionUtils.encrypt(secret, generatedSecret);
+        System.out.println(encryptedString);
+        String decryptedString = EicEncryptionUtils.decrypt(encryptedString, generatedSecret);
+        System.out.println(decryptedString);
+        assertTrue(secret.equals(decryptedString));
     }
 }
