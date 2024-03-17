@@ -61,7 +61,7 @@
               <manifest>
                 <addClasspath>true</addClasspath>
                 <classpathPrefix>lib/</classpathPrefix>
-                <mainClass>com.github.vivek9237.Main</mainClass>
+                <mainClass>com.github.vivek9237.eic.Main</mainClass>
               </manifest>
             </archive>
           </configuration>

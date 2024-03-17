@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import com.github.vivek9237.security.EicEncryptionUtils;
+import com.github.vivek9237.eic.security.EicEncryptionUtils;
 
 /**
  * Unit test for simple App.

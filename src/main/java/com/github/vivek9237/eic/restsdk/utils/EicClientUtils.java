@@ -19,6 +19,7 @@ import java.time.Instant;
 
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
+import com.github.vivek9237.eic.utils.EicJsonUtils;
 import com.google.gson.JsonObject;
 
 public class EicClientUtils {
