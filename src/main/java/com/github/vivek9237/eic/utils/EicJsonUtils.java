@@ -1,4 +1,4 @@
-package com.github.vivek9237.eic.restsdk.utils;
+package com.github.vivek9237.eic.utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;

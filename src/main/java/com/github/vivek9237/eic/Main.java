@@ -1,6 +1,6 @@
-package com.github.vivek9237;
+package com.github.vivek9237.eic;
 
-import com.github.vivek9237.security.EicEncryptionUtils;
+import com.github.vivek9237.eic.security.EicEncryptionUtils;
 
 public class Main {
     public static void main(String[] args) throws Exception {

@@ -15,9 +15,9 @@ import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
 import com.github.vivek9237.eic.restsdk.core.EicRefreshToken;
 import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
-import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
+import com.github.vivek9237.eic.security.EicEncryptionUtils;
 import com.github.vivek9237.eic.utils.EicCommonUtils;
-import com.github.vivek9237.security.EicEncryptionUtils;
+import com.github.vivek9237.eic.utils.EicJsonUtils;
 
 public class EicClient {
 	private String EIC_BASE_URL;
@@ -107,7 +107,7 @@ public class EicClient {
 		} else {
 			throw new Exception("[username and password] or [refreshToken] is null.");
 		}
-		eicRestApiConfig = EicJsonUtils.parseJsonFileToMap("/eic_rest_api.json");
+		eicRestApiConfig = EicJsonUtils.parseJsonFileToMap("/internal/eic_rest_api.json");
 	}
 
 	/**

@@ -2,7 +2,8 @@ package com.github.vivek9237.eic.restsdk.core;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
+
+import com.github.vivek9237.eic.utils.EicJsonUtils;
 
 /**
  * Represents a request to be sent to an EIC (Enterprise Identity Cloud) API.

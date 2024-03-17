@@ -1,4 +1,4 @@
-package com.github.vivek9237.security;
+package com.github.vivek9237.eic.security;
 
 import java.util.Base64;
 

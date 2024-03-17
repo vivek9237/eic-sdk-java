@@ -6,7 +6,7 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 
 import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
-import com.github.vivek9237.eic.restsdk.utils.EicJsonUtils;
+import com.github.vivek9237.eic.utils.EicJsonUtils;
 
 /**
  * Represents a response from an EIC (Enterprise Identity Cloud) API request.
