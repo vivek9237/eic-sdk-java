@@ -14,7 +14,6 @@ import com.github.vivek9237.eic.restsdk.accounts.AccountStatus;
 import com.github.vivek9237.eic.restsdk.accounts.CreateAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.CreateAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest;
-import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest.Advsearchcriteria;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse.Accountdetail;
 import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
