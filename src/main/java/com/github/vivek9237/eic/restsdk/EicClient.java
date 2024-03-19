@@ -10,6 +10,13 @@ import java.util.Properties;
 import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
+import com.github.vivek9237.eic.restsdk.accounts.AccountStatus;
+import com.github.vivek9237.eic.restsdk.accounts.CreateAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.CreateAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest.Advsearchcriteria;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse.Accountdetail;
 import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
@@ -18,6 +25,7 @@ import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.github.vivek9237.eic.security.EicEncryptionUtils;
 import com.github.vivek9237.eic.utils.EicCommonUtils;
 import com.github.vivek9237.eic.utils.EicJsonUtils;
+import com.google.gson.Gson;
 
 public class EicClient {
 	private String EIC_BASE_URL;
@@ -64,11 +72,13 @@ public class EicClient {
 	public EicClient() throws Exception {
 		this(new HashMap<String, String>() {
 			{
-				String eicPropertiesFile = (String)EicJsonUtils.parseJsonFileToMap("/properties.json").get("eic_properties_file_name");
+				String eicPropertiesFile = (String) EicJsonUtils.parseJsonFileToMap("/properties.json")
+						.get("eic_properties_file_name");
 				Properties prop = EicCommonUtils.readPropertyFile(eicPropertiesFile);
 				put("tenant", prop.getProperty("com.github.vivek9237.eic.tenant"));
 				put("username", prop.getProperty("com.github.vivek9237.eic.username"));
-				String password = EicEncryptionUtils.decrypt(prop.getProperty("com.github.vivek9237.eic.password"), prop.getProperty("com.github.vivek9237.eic.secret"));
+				String password = EicEncryptionUtils.decrypt(prop.getProperty("com.github.vivek9237.eic.password"),
+						prop.getProperty("com.github.vivek9237.eic.secret"));
 				put("password", password);
 			}
 		});
@@ -305,9 +315,9 @@ public class EicClient {
 	}
 
 	/**
-     * This method is deprecated and should not be used anymore.
-     */
-    @Deprecated
+	 * This method is deprecated and should not be used anymore.
+	 */
+	@Deprecated
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Map<String, Object>> getUsers(Map<String, Object> body) throws Exception {
 		List<Map<String, Object>> userDetailsList;
@@ -464,13 +474,11 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
-	public List<Map<String, Object>> getAccounts(String username)
+	public List<Accountdetail> getAccounts(String username)
 			throws AuthenticationException, IOException, Exception {
-		return getAccounts(new HashMap<String, Object>() {
-			{
-				put("username", username);
-			};
-		});
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
@@ -484,16 +492,15 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
-	public List<Map<String, Object>> getAccounts(String username, Boolean active)
+	public List<Accountdetail> getAccounts(String username, Boolean active)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("advsearchcriteria", new HashMap<String, String>() {
-			{
-				put("status", active ? "ACTIVE" : "INACTIVE");
-			};
-		});
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		GetAccountRequest.Advsearchcriteria advsearchcriteria = getAccountRequest.new Advsearchcriteria();
+		advsearchcriteria
+				.setStatus(active ? AccountStatus.ACTIVESTATUS.getValue() : AccountStatus.INACTIVESTATUS.getValue());
+		getAccountRequest.setAdvsearchcriteria(advsearchcriteria);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
@@ -508,12 +515,12 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
-	public List<Map<String, Object>> getAccounts(String username, String endpointName)
+	public List<Accountdetail> getAccounts(String username, String endpointName)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("endpoint", endpointName);
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		getAccountRequest.setEndpoint(endpointName);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
@@ -529,17 +536,16 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
-	public List<Map<String, Object>> getAccounts(String username, String endpointName, Boolean active)
+	public List<Accountdetail> getAccounts(String username, String endpointName, Boolean active)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("endpoint", endpointName);
-		body.put("advsearchcriteria", new HashMap<String, String>() {
-			{
-				put("status", active ? "ACTIVE" : "INACTIVE");
-			};
-		});
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		getAccountRequest.setEndpoint(endpointName);
+		GetAccountRequest.Advsearchcriteria advsearchcriteria = getAccountRequest.new Advsearchcriteria();
+		advsearchcriteria
+				.setStatus(active ? AccountStatus.ACTIVESTATUS.getValue() : AccountStatus.INACTIVESTATUS.getValue());
+		getAccountRequest.setAdvsearchcriteria(advsearchcriteria);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
@@ -553,28 +559,55 @@ public class EicClient {
 	 * @throws Exception               If an error occurs during the retrieval
 	 *                                 process.
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getAccounts(Map<String, Object> body)
+	public List<Accountdetail> getAccounts(GetAccountRequest getAccountRequest)
 			throws AuthenticationException, IOException, Exception {
-		List<Map<String, Object>> accounts = null;
-		EicResponse eicResponse = getAccounts(body, true);
-		String errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsString();
-		System.out.println(errorCode);
+		EicResponse eicResponse = getAccounts(getAccountRequest, true);
+		GetAccountResponse getAccountResponse = new Gson().fromJson(eicResponse.getBody(), GetAccountResponse.class);
+		String errorCode = getAccountResponse.getErrorCode();
+		List<Accountdetail> accounts = null;
 		if (errorCode.equals("0")) {
-			accounts = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
-					.get("Accountdetails");
+			accounts = getAccountResponse.getAccountdetails();
 		} else {
 			throw new Exception(eicResponse.getBodyAsJson().get("msg").getAsString());
 		}
 		return accounts;
 	}
 
-	private EicResponse getAccounts(Map<String, Object> body, Boolean test)
+	private EicResponse getAccounts(GetAccountRequest getAccountRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Get_Account_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
-		String requestBody = EicJsonUtils.mapToJsonObjectString(body);
+		String requestBody = new Gson().toJson(getAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+			System.out.println(eicRequest.toString());
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	public boolean createAccount(CreateAccountRequest createAccountRequest) throws AuthenticationException, IOException, Exception{
+		EicResponse eicResponse = createAccount(createAccountRequest, true);
+		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(), CreateAccountResponse.class);
+		String errorCode = createAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(createAccountResponse.getMessage());
+		}
+	}
+	private EicResponse createAccount(CreateAccountRequest createAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Create_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = new Gson().toJson(createAccountRequest);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
