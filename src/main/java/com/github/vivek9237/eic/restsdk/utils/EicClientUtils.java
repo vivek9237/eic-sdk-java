@@ -94,15 +94,18 @@ public class EicClientUtils {
             }
             // Read the response body
             StringBuilder response = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
+            BufferedReader br;
+            try {
+                br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             } catch (IOException e) {
-                // Handle cases where there is no input stream (e.g., for error responses)
+                // If an error occurred while getting the input stream, try to get the error stream
+                br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
             }
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+
             return new EicResponse(responseCode, responseHeaders, response.toString());
         } finally {
             // Disconnect to release resources
