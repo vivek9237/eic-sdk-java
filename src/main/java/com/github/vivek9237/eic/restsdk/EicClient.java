@@ -15,6 +15,7 @@ import com.github.vivek9237.eic.restsdk.accounts.CreateAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.CreateAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.UpdateAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse.Accountdetail;
 import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
@@ -607,6 +608,34 @@ public class EicClient {
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = new Gson().toJson(createAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	public boolean updateAccount(UpdateAccountRequest updateAccountRequest) throws AuthenticationException, IOException, Exception{
+		EicResponse eicResponse = updateAccount(updateAccountRequest, true);
+		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(), CreateAccountResponse.class);
+		String errorCode = createAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(createAccountResponse.getMessage());
+		}
+	}
+	private EicResponse updateAccount(UpdateAccountRequest updateAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = new Gson().toJson(updateAccountRequest);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
