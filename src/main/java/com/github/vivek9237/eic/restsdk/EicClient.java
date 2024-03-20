@@ -676,7 +676,7 @@ public class EicClient {
 
 	private EicResponse assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Assign_Account_To_User");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignAccountToUserRequest);
@@ -709,7 +709,7 @@ public class EicClient {
 	private EicResponse assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest,
 			Boolean test)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Assign_Entitlement_To_Account");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignEntitlementToAccountRequest);
@@ -741,7 +741,7 @@ public class EicClient {
 	private EicResponse removeEntitlementFromAccount(
 			RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Remove_Entitlement_From_Account");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = EicClientUtils.xWwwFormUrlencoder(removeEntitlementFromAccountRequest);
