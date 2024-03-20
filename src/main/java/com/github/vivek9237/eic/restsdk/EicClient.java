@@ -328,7 +328,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			Object userDetailsObj = EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody()).get("userdetails");
 			if (userDetailsObj != null) {
 				userDetailsList = (List<Map<String, Object>>) userDetailsObj;
@@ -353,7 +353,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			return eicResponse;
@@ -455,7 +455,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, null);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			throw new Exception(eicResponse.toString());
@@ -583,7 +583,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			System.out.println(eicRequest.toString());
 			return eicResponse;
 		} else {
@@ -612,8 +612,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
-			System.out.println(eicRequest.toString());
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			throw new Exception(eicResponse.toString());
