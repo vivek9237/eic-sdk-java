@@ -1,6 +1,6 @@
 package com.github.vivek9237.eic.restsdk.accounts;
 
-public class AssignAccountToEntitlementRequest {
+public class RemoveEntitlementFromAccountRequest {
     private String securitysystem;
     private String endpoint;
     private String accountname;

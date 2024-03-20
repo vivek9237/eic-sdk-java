@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -234,6 +235,26 @@ public class EicClientUtils {
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        }
+        return result.toString();
+    }
+    public static <T> String xWwwFormUrlencoder(T object) throws IllegalAccessException, UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        // Get all fields of the class
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true); // Ensure private fields are accessible
+            String fieldName = field.getName();
+            Object value = field.get(object);
+            // Skip null values
+            if (value != null) {
+                if (result.length() > 0) {
+                    result.append("&");
+                }
+                result.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.name()));
+                result.append("=");
+                result.append(URLEncoder.encode(String.valueOf(value), StandardCharsets.UTF_8.name()));
+            }
         }
         return result.toString();
     }

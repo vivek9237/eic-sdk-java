@@ -3,7 +3,7 @@ package com.github.vivek9237.eic.restsdk.accounts;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AssignAccountToEntitlementResponse {
+public class RemoveEntitlementFromAccountResponse {
     @SerializedName("errorCode")
     @Expose
     private String errorCode;

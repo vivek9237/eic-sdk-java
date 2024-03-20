@@ -11,12 +11,19 @@ import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
 import com.github.vivek9237.eic.restsdk.accounts.AccountStatus;
+import com.github.vivek9237.eic.restsdk.accounts.AssignEntitlementToAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.AssignEntitlementToAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.AssignAccountToUserRequest;
+import com.github.vivek9237.eic.restsdk.accounts.AssignAccountToUserResponse;
 import com.github.vivek9237.eic.restsdk.accounts.CreateAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.CreateAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.UpdateAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.UpdateAccountResponse;
 import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse.Accountdetail;
+import com.github.vivek9237.eic.restsdk.accounts.RemoveEntitlementFromAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.RemoveEntitlementFromAccountResponse;
 import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
@@ -592,9 +599,11 @@ public class EicClient {
 		}
 	}
 
-	public boolean createAccount(CreateAccountRequest createAccountRequest) throws AuthenticationException, IOException, Exception{
+	public boolean createAccount(CreateAccountRequest createAccountRequest)
+			throws AuthenticationException, IOException, Exception {
 		EicResponse eicResponse = createAccount(createAccountRequest, true);
-		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(), CreateAccountResponse.class);
+		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(),
+				CreateAccountResponse.class);
 		String errorCode = createAccountResponse.getErrorCode();
 		if (errorCode.equals("0")) {
 			return true;
@@ -602,6 +611,7 @@ public class EicClient {
 			throw new Exception(createAccountResponse.getMessage());
 		}
 	}
+
 	private EicResponse createAccount(CreateAccountRequest createAccountRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Create_Accounts");
@@ -620,22 +630,121 @@ public class EicClient {
 		}
 	}
 
-	public boolean updateAccount(UpdateAccountRequest updateAccountRequest) throws AuthenticationException, IOException, Exception{
+	public boolean updateAccount(UpdateAccountRequest updateAccountRequest)
+			throws AuthenticationException, IOException, Exception {
 		EicResponse eicResponse = updateAccount(updateAccountRequest, true);
-		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(), CreateAccountResponse.class);
-		String errorCode = createAccountResponse.getErrorCode();
+		UpdateAccountResponse updateAccountResponse = new Gson().fromJson(eicResponse.getBody(),
+				UpdateAccountResponse.class);
+		String errorCode = updateAccountResponse.getErrorCode();
 		if (errorCode.equals("0")) {
 			return true;
 		} else {
-			throw new Exception(createAccountResponse.getMessage());
+			throw new Exception(updateAccountResponse.getMessage());
 		}
 	}
+
 	private EicResponse updateAccount(UpdateAccountRequest updateAccountRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
 		String requestBody = new Gson().toJson(updateAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	public boolean assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = assignAccountToUsers(assignAccountToUserRequest, true);
+		AssignAccountToUserResponse assignAccountToUserResponse = new Gson().fromJson(eicResponse.getBody(),
+				AssignAccountToUserResponse.class);
+		String errorCode = assignAccountToUserResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(assignAccountToUserResponse.getMessage());
+		}
+	}
+
+	private EicResponse assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignAccountToUserRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	public boolean assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = assignEntitlementToAccount(assignEntitlementToAccountRequest, true);
+
+		AssignEntitlementToAccountResponse assignEntitlementToAccountResponse = new Gson()
+				.fromJson(eicResponse.getBody(), AssignEntitlementToAccountResponse.class);
+		String errorCode = assignEntitlementToAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(assignEntitlementToAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest,
+			Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignEntitlementToAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	public boolean removeEntitlementFromAccount(RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = removeEntitlementFromAccount(removeEntitlementFromAccountRequest, true);
+		RemoveEntitlementFromAccountResponse removeEntitlementFromAccountResponse = new Gson()
+				.fromJson(eicResponse.getBody(), RemoveEntitlementFromAccountResponse.class);
+		String errorCode = removeEntitlementFromAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(removeEntitlementFromAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse removeEntitlementFromAccount(
+			RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(removeEntitlementFromAccountRequest);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
