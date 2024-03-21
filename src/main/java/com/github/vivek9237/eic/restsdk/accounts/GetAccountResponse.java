@@ -4,6 +4,9 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Class representing a response for fetching accounts.
+ */
 public class GetAccountResponse {
     @SerializedName("msg")
     @Expose
