@@ -238,6 +238,15 @@ public class EicClientUtils {
         }
         return result.toString();
     }
+    /**
+ * Encodes the fields of an object into a URL-encoded string in the "application/x-www-form-urlencoded" format.
+ *
+ * @param <T>    the type of the object to encode
+ * @param object the object whose fields are to be encoded
+ * @return a URL-encoded string representing the fields of the object
+ * @throws IllegalAccessException       if access to a field is denied
+ * @throws UnsupportedEncodingException if the character encoding is not supported
+ */
     public static <T> String xWwwFormUrlencoder(T object) throws IllegalAccessException, UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         // Get all fields of the class

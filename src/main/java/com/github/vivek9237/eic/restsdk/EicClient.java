@@ -472,14 +472,15 @@ public class EicClient {
 
 	/* Get Accounts */
 	/**
-	 * Retrieves all accounts associated with the specified username.
+	 * Retrieves a list of account details associated with the given username.
 	 * 
-	 * @param username The username of the user to retrieve accounts for.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username the username for which to retrieve account details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request
+	 * @throws Exception               if an unexpected error occurs
 	 */
 	public List<Accountdetail> getAccounts(String username)
 			throws AuthenticationException, IOException, Exception {
@@ -489,15 +490,17 @@ public class EicClient {
 	}
 
 	/**
-	 * Retrieves accounts associated with the specified username, and status.
+	 * Retrieves a list of account details associated with the given username.
 	 * 
-	 * @param username The username of the user to retrieve accounts for.
-	 * @param active   Specifies whether to retrieve active or inactive accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username the username for which to retrieve account details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
 	public List<Accountdetail> getAccounts(String username, Boolean active)
 			throws AuthenticationException, IOException, Exception {
@@ -511,17 +514,22 @@ public class EicClient {
 	}
 
 	/**
-	 * Retrieves all accounts associated with the specified username and endpoint
-	 * name.
+	 * Retrieves a list of account details associated with the given username and
+	 * endpoint.
 	 * 
-	 * @param username     The username of the user to retrieve accounts for.
-	 * @param endpointName The endpoint name for filtering accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username     the username for which to retrieve account details
+	 * @param endpointName the name of the endpoint from which to retrieve account
+	 *                     details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
+
 	public List<Accountdetail> getAccounts(String username, String endpointName)
 			throws AuthenticationException, IOException, Exception {
 		GetAccountRequest getAccountRequest = new GetAccountRequest();
@@ -531,18 +539,25 @@ public class EicClient {
 	}
 
 	/**
-	 * Retrieves accounts associated with the specified username, endpoint name, and
-	 * active status.
+	 * Retrieves a list of account details associated with the given username and
+	 * endpoint,
+	 * filtered by the specified active status.
 	 * 
-	 * @param username     The username of the user to retrieve accounts for.
-	 * @param endpointName The endpoint name for filtering accounts.
-	 * @param active       Specifies whether to retrieve active accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username     the username for which to retrieve account details
+	 * @param endpointName the name of the endpoint from which to retrieve account
+	 *                     details
+	 * @param active       a {@code Boolean} value indicating whether to retrieve
+	 *                     active accounts (true) or inactive accounts (false)
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
+
 	public List<Accountdetail> getAccounts(String username, String endpointName, Boolean active)
 			throws AuthenticationException, IOException, Exception {
 		GetAccountRequest getAccountRequest = new GetAccountRequest();
@@ -556,16 +571,21 @@ public class EicClient {
 	}
 
 	/**
-	 * Retrieves accounts based on the provided criteria.
+	 * Retrieves a list of account details based on the provided
+	 * {@code GetAccountRequest}.
 	 * 
-	 * @param body A map containing criteria for account retrieval.
-	 *             Supported keys: "username", "endpoint", "advsearchcriteria".
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param getAccountRequest the request object containing parameters for account
+	 *                          retrieval
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
+
 	public List<Accountdetail> getAccounts(GetAccountRequest getAccountRequest)
 			throws AuthenticationException, IOException, Exception {
 		EicResponse eicResponse = getAccounts(getAccountRequest, true);
@@ -599,6 +619,21 @@ public class EicClient {
 		}
 	}
 
+	/**
+	 * Creates an account based on the provided {@code CreateAccountRequest}.
+	 * 
+	 * @param createAccountRequest the request object containing parameters for
+	 *                             account creation
+	 * @return {@code true} if the account creation is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account creation process
+	 */
+
 	public boolean createAccount(CreateAccountRequest createAccountRequest)
 			throws AuthenticationException, IOException, Exception {
 		EicResponse eicResponse = createAccount(createAccountRequest, true);
@@ -629,6 +664,22 @@ public class EicClient {
 			throw new Exception(eicResponse.toString());
 		}
 	}
+
+	/**
+	 * Updates an existing account based on the provided
+	 * {@code UpdateAccountRequest}.
+	 * 
+	 * @param updateAccountRequest the request object containing parameters for
+	 *                             updating the account
+	 * @return {@code true} if the account update is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account update process
+	 */
 
 	public boolean updateAccount(UpdateAccountRequest updateAccountRequest)
 			throws AuthenticationException, IOException, Exception {
@@ -661,6 +712,22 @@ public class EicClient {
 		}
 	}
 
+	/**
+	 * Assigns an account to users based on the provided
+	 * {@code AssignAccountToUserRequest}.
+	 * 
+	 * @param assignAccountToUserRequest the request object containing parameters
+	 *                                   for assigning the account to users
+	 * @return {@code true} if the account assignment is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account assignment process
+	 */
+
 	public boolean assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest)
 			throws AuthenticationException, IOException, Exception {
 		EicResponse eicResponse = assignAccountToUsers(assignAccountToUserRequest, true);
@@ -691,6 +758,23 @@ public class EicClient {
 			throw new Exception(eicResponse.toString());
 		}
 	}
+
+	/**
+	 * Assigns an entitlement to an account based on the provided
+	 * {@code AssignEntitlementToAccountRequest}.
+	 * 
+	 * @param assignEntitlementToAccountRequest the request object containing
+	 *                                          parameters for assigning the
+	 *                                          entitlement to the account
+	 * @return {@code true} if the entitlement assignment is successful,
+	 *         {@code false} otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 entitlement assignment process
+	 */
 
 	public boolean assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest)
 			throws AuthenticationException, IOException, Exception {
@@ -724,6 +808,23 @@ public class EicClient {
 			throw new Exception(eicResponse.toString());
 		}
 	}
+
+	/**
+	 * Removes an entitlement from an account based on the provided
+	 * {@code RemoveEntitlementFromAccountRequest}.
+	 * 
+	 * @param removeEntitlementFromAccountRequest the request object containing
+	 *                                            parameters for removing the
+	 *                                            entitlement from the account
+	 * @return {@code true} if the entitlement removal is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 entitlement removal process
+	 */
 
 	public boolean removeEntitlementFromAccount(RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest)
 			throws AuthenticationException, IOException, Exception {
