@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -94,15 +95,18 @@ public class EicClientUtils {
             }
             // Read the response body
             StringBuilder response = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
+            BufferedReader br;
+            try {
+                br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
             } catch (IOException e) {
-                // Handle cases where there is no input stream (e.g., for error responses)
+                // If an error occurred while getting the input stream, try to get the error stream
+                br = new BufferedReader(new InputStreamReader(connection.getErrorStream(), StandardCharsets.UTF_8));
             }
+            String responseLine;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+
             return new EicResponse(responseCode, responseHeaders, response.toString());
         } finally {
             // Disconnect to release resources
@@ -231,6 +235,35 @@ public class EicClientUtils {
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+        }
+        return result.toString();
+    }
+    /**
+ * Encodes the fields of an object into a URL-encoded string in the "application/x-www-form-urlencoded" format.
+ *
+ * @param <T>    the type of the object to encode
+ * @param object the object whose fields are to be encoded
+ * @return a URL-encoded string representing the fields of the object
+ * @throws IllegalAccessException       if access to a field is denied
+ * @throws UnsupportedEncodingException if the character encoding is not supported
+ */
+    public static <T> String xWwwFormUrlencoder(T object) throws IllegalAccessException, UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        // Get all fields of the class
+        Field[] fields = object.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true); // Ensure private fields are accessible
+            String fieldName = field.getName();
+            Object value = field.get(object);
+            // Skip null values
+            if (value != null) {
+                if (result.length() > 0) {
+                    result.append("&");
+                }
+                result.append(URLEncoder.encode(fieldName, StandardCharsets.UTF_8.name()));
+                result.append("=");
+                result.append(URLEncoder.encode(String.valueOf(value), StandardCharsets.UTF_8.name()));
+            }
         }
         return result.toString();
     }

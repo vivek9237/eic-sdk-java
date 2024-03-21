@@ -40,6 +40,41 @@
 			"HEADER": {
 				"Content-Type": "application/json"
 			}
+		},
+		"Create_Accounts": {
+			"URL": "/ECM/api/v5/createAccount",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		},
+		"Update_Accounts": {
+			"URL": "/ECM/api/v5/updateAccount",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/json"
+			}
+		},
+		"Assign_Account_To_User": {
+			"URL": "/ECM/api/v5/assignAccountToUser",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		},
+		"Assign_Entitlement_To_Account": {
+			"URL": "/ECM/api/v5/assignAccountToEntitlement",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
+		},
+		"Remove_Entitlement_From_Account": {
+			"URL": "/ECM/api/v5/removeAccountToEntitlement",
+			"METHOD": "POST",
+			"HEADER": {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 		}
 	}
 }

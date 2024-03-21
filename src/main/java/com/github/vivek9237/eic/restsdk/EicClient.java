@@ -10,6 +10,20 @@ import java.util.Properties;
 import java.net.URLEncoder;
 import javax.naming.AuthenticationException;
 
+import com.github.vivek9237.eic.restsdk.accounts.AccountStatus;
+import com.github.vivek9237.eic.restsdk.accounts.AssignEntitlementToAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.AssignEntitlementToAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.AssignAccountToUserRequest;
+import com.github.vivek9237.eic.restsdk.accounts.AssignAccountToUserResponse;
+import com.github.vivek9237.eic.restsdk.accounts.CreateAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.CreateAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.UpdateAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.UpdateAccountResponse;
+import com.github.vivek9237.eic.restsdk.accounts.GetAccountResponse.Accountdetail;
+import com.github.vivek9237.eic.restsdk.accounts.RemoveEntitlementFromAccountRequest;
+import com.github.vivek9237.eic.restsdk.accounts.RemoveEntitlementFromAccountResponse;
 import com.github.vivek9237.eic.restsdk.core.EicAccessToken;
 import com.github.vivek9237.eic.restsdk.core.EicRequest;
 import com.github.vivek9237.eic.restsdk.core.EicResponse;
@@ -18,6 +32,7 @@ import com.github.vivek9237.eic.restsdk.utils.EicClientUtils;
 import com.github.vivek9237.eic.security.EicEncryptionUtils;
 import com.github.vivek9237.eic.utils.EicCommonUtils;
 import com.github.vivek9237.eic.utils.EicJsonUtils;
+import com.google.gson.Gson;
 
 public class EicClient {
 	private String EIC_BASE_URL;
@@ -64,11 +79,13 @@ public class EicClient {
 	public EicClient() throws Exception {
 		this(new HashMap<String, String>() {
 			{
-				String eicPropertiesFile = (String)EicJsonUtils.parseJsonFileToMap("/properties.json").get("eic_properties_file_name");
+				String eicPropertiesFile = (String) EicJsonUtils.parseJsonFileToMap("/properties.json")
+						.get("eic_properties_file_name");
 				Properties prop = EicCommonUtils.readPropertyFile(eicPropertiesFile);
 				put("tenant", prop.getProperty("com.github.vivek9237.eic.tenant"));
 				put("username", prop.getProperty("com.github.vivek9237.eic.username"));
-				String password = EicEncryptionUtils.decrypt(prop.getProperty("com.github.vivek9237.eic.password"), prop.getProperty("com.github.vivek9237.eic.secret"));
+				String password = EicEncryptionUtils.decrypt(prop.getProperty("com.github.vivek9237.eic.password"),
+						prop.getProperty("com.github.vivek9237.eic.secret"));
 				put("password", password);
 			}
 		});
@@ -305,9 +322,9 @@ public class EicClient {
 	}
 
 	/**
-     * This method is deprecated and should not be used anymore.
-     */
-    @Deprecated
+	 * This method is deprecated and should not be used anymore.
+	 */
+	@Deprecated
 	@SuppressWarnings({ "unchecked", "unused" })
 	private List<Map<String, Object>> getUsers(Map<String, Object> body) throws Exception {
 		List<Map<String, Object>> userDetailsList;
@@ -319,7 +336,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			Object userDetailsObj = EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody()).get("userdetails");
 			if (userDetailsObj != null) {
 				userDetailsList = (List<Map<String, Object>>) userDetailsObj;
@@ -344,7 +361,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			return eicResponse;
@@ -446,7 +463,7 @@ public class EicClient {
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, null);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			throw new Exception(eicResponse.toString());
@@ -455,133 +472,386 @@ public class EicClient {
 
 	/* Get Accounts */
 	/**
-	 * Retrieves all accounts associated with the specified username.
+	 * Retrieves a list of account details associated with the given username.
 	 * 
-	 * @param username The username of the user to retrieve accounts for.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username the username for which to retrieve account details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request
+	 * @throws Exception               if an unexpected error occurs
 	 */
-	public List<Map<String, Object>> getAccounts(String username)
+	public List<Accountdetail> getAccounts(String username)
 			throws AuthenticationException, IOException, Exception {
-		return getAccounts(new HashMap<String, Object>() {
-			{
-				put("username", username);
-			};
-		});
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
-	 * Retrieves accounts associated with the specified username, and status.
+	 * Retrieves a list of account details associated with the given username.
 	 * 
-	 * @param username The username of the user to retrieve accounts for.
-	 * @param active   Specifies whether to retrieve active or inactive accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username the username for which to retrieve account details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
-	public List<Map<String, Object>> getAccounts(String username, Boolean active)
+	public List<Accountdetail> getAccounts(String username, Boolean active)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("advsearchcriteria", new HashMap<String, String>() {
-			{
-				put("status", active ? "ACTIVE" : "INACTIVE");
-			};
-		});
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		GetAccountRequest.Advsearchcriteria advsearchcriteria = getAccountRequest.new Advsearchcriteria();
+		advsearchcriteria
+				.setStatus(active ? AccountStatus.ACTIVESTATUS.getValue() : AccountStatus.INACTIVESTATUS.getValue());
+		getAccountRequest.setAdvsearchcriteria(advsearchcriteria);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
-	 * Retrieves all accounts associated with the specified username and endpoint
-	 * name.
+	 * Retrieves a list of account details associated with the given username and
+	 * endpoint.
 	 * 
-	 * @param username     The username of the user to retrieve accounts for.
-	 * @param endpointName The endpoint name for filtering accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username     the username for which to retrieve account details
+	 * @param endpointName the name of the endpoint from which to retrieve account
+	 *                     details
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
-	public List<Map<String, Object>> getAccounts(String username, String endpointName)
+
+	public List<Accountdetail> getAccounts(String username, String endpointName)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("endpoint", endpointName);
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		getAccountRequest.setEndpoint(endpointName);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
-	 * Retrieves accounts associated with the specified username, endpoint name, and
-	 * active status.
+	 * Retrieves a list of account details associated with the given username and
+	 * endpoint,
+	 * filtered by the specified active status.
 	 * 
-	 * @param username     The username of the user to retrieve accounts for.
-	 * @param endpointName The endpoint name for filtering accounts.
-	 * @param active       Specifies whether to retrieve active accounts.
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param username     the username for which to retrieve account details
+	 * @param endpointName the name of the endpoint from which to retrieve account
+	 *                     details
+	 * @param active       a {@code Boolean} value indicating whether to retrieve
+	 *                     active accounts (true) or inactive accounts (false)
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
-	public List<Map<String, Object>> getAccounts(String username, String endpointName, Boolean active)
+
+	public List<Accountdetail> getAccounts(String username, String endpointName, Boolean active)
 			throws AuthenticationException, IOException, Exception {
-		Map<String, Object> body = new HashMap<String, Object>();
-		body.put("username", username);
-		body.put("endpoint", endpointName);
-		body.put("advsearchcriteria", new HashMap<String, String>() {
-			{
-				put("status", active ? "ACTIVE" : "INACTIVE");
-			};
-		});
-		return getAccounts(body);
+		GetAccountRequest getAccountRequest = new GetAccountRequest();
+		getAccountRequest.setUsername(username);
+		getAccountRequest.setEndpoint(endpointName);
+		GetAccountRequest.Advsearchcriteria advsearchcriteria = getAccountRequest.new Advsearchcriteria();
+		advsearchcriteria
+				.setStatus(active ? AccountStatus.ACTIVESTATUS.getValue() : AccountStatus.INACTIVESTATUS.getValue());
+		getAccountRequest.setAdvsearchcriteria(advsearchcriteria);
+		return getAccounts(getAccountRequest);
 	}
 
 	/**
-	 * Retrieves accounts based on the provided criteria.
+	 * Retrieves a list of account details based on the provided
+	 * {@code GetAccountRequest}.
 	 * 
-	 * @param body A map containing criteria for account retrieval.
-	 *             Supported keys: "username", "endpoint", "advsearchcriteria".
-	 * @return A list of maps containing account details.
-	 * @throws AuthenticationException If authentication fails.
-	 * @throws IOException             If an I/O error occurs.
-	 * @throws Exception               If an error occurs during the retrieval
-	 *                                 process.
+	 * @param getAccountRequest the request object containing parameters for account
+	 *                          retrieval
+	 * @return a list of {@code Accountdetail} objects representing the account
+	 *         details
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 provided username is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account retrieval process
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Map<String, Object>> getAccounts(Map<String, Object> body)
+
+	public List<Accountdetail> getAccounts(GetAccountRequest getAccountRequest)
 			throws AuthenticationException, IOException, Exception {
-		List<Map<String, Object>> accounts = null;
-		EicResponse eicResponse = getAccounts(body, true);
-		String errorCode = eicResponse.getBodyAsJson().get("errorCode").getAsString();
-		System.out.println(errorCode);
+		EicResponse eicResponse = getAccounts(getAccountRequest, true);
+		GetAccountResponse getAccountResponse = new Gson().fromJson(eicResponse.getBody(), GetAccountResponse.class);
+		String errorCode = getAccountResponse.getErrorCode();
+		List<Accountdetail> accounts = null;
 		if (errorCode.equals("0")) {
-			accounts = (List<Map<String, Object>>) EicJsonUtils.jsonObjectStringToMap(eicResponse.getBody())
-					.get("Accountdetails");
+			accounts = getAccountResponse.getAccountdetails();
 		} else {
 			throw new Exception(eicResponse.getBodyAsJson().get("msg").getAsString());
 		}
 		return accounts;
 	}
 
-	private EicResponse getAccounts(Map<String, Object> body, Boolean test)
+	private EicResponse getAccounts(GetAccountRequest getAccountRequest, Boolean test)
 			throws AuthenticationException, IOException, Exception {
 		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Get_Account_Details");
 		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
 		String method = (String) apiConfig.get("METHOD");
-		String requestBody = EicJsonUtils.mapToJsonObjectString(body);
+		String requestBody = new Gson().toJson(getAccountRequest);
 		@SuppressWarnings("unchecked")
 		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
 		headers.put("Authorization", "Bearer " + getAccessToken());
 		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
 		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
-		if (eicResponse.getResponseCode() >= 200 || eicResponse.getResponseCode() <= 299) {
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			System.out.println(eicRequest.toString());
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	/**
+	 * Creates an account based on the provided {@code CreateAccountRequest}.
+	 * 
+	 * @param createAccountRequest the request object containing parameters for
+	 *                             account creation
+	 * @return {@code true} if the account creation is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account creation process
+	 */
+
+	public boolean createAccount(CreateAccountRequest createAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = createAccount(createAccountRequest, true);
+		CreateAccountResponse createAccountResponse = new Gson().fromJson(eicResponse.getBody(),
+				CreateAccountResponse.class);
+		String errorCode = createAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(createAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse createAccount(CreateAccountRequest createAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Create_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = new Gson().toJson(createAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	/**
+	 * Updates an existing account based on the provided
+	 * {@code UpdateAccountRequest}.
+	 * 
+	 * @param updateAccountRequest the request object containing parameters for
+	 *                             updating the account
+	 * @return {@code true} if the account update is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account update process
+	 */
+
+	public boolean updateAccount(UpdateAccountRequest updateAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = updateAccount(updateAccountRequest, true);
+		UpdateAccountResponse updateAccountResponse = new Gson().fromJson(eicResponse.getBody(),
+				UpdateAccountResponse.class);
+		String errorCode = updateAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(updateAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse updateAccount(UpdateAccountRequest updateAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Update_Accounts");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = new Gson().toJson(updateAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	/**
+	 * Assigns an account to users based on the provided
+	 * {@code AssignAccountToUserRequest}.
+	 * 
+	 * @param assignAccountToUserRequest the request object containing parameters
+	 *                                   for assigning the account to users
+	 * @return {@code true} if the account assignment is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 account assignment process
+	 */
+
+	public boolean assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = assignAccountToUsers(assignAccountToUserRequest, true);
+		AssignAccountToUserResponse assignAccountToUserResponse = new Gson().fromJson(eicResponse.getBody(),
+				AssignAccountToUserResponse.class);
+		String errorCode = assignAccountToUserResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(assignAccountToUserResponse.getMessage());
+		}
+	}
+
+	private EicResponse assignAccountToUsers(AssignAccountToUserRequest assignAccountToUserRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Assign_Account_To_User");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignAccountToUserRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	/**
+	 * Assigns an entitlement to an account based on the provided
+	 * {@code AssignEntitlementToAccountRequest}.
+	 * 
+	 * @param assignEntitlementToAccountRequest the request object containing
+	 *                                          parameters for assigning the
+	 *                                          entitlement to the account
+	 * @return {@code true} if the entitlement assignment is successful,
+	 *         {@code false} otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 entitlement assignment process
+	 */
+
+	public boolean assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = assignEntitlementToAccount(assignEntitlementToAccountRequest, true);
+
+		AssignEntitlementToAccountResponse assignEntitlementToAccountResponse = new Gson()
+				.fromJson(eicResponse.getBody(), AssignEntitlementToAccountResponse.class);
+		String errorCode = assignEntitlementToAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(assignEntitlementToAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse assignEntitlementToAccount(AssignEntitlementToAccountRequest assignEntitlementToAccountRequest,
+			Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Assign_Entitlement_To_Account");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(assignEntitlementToAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
+			return eicResponse;
+		} else {
+			throw new Exception(eicResponse.toString());
+		}
+	}
+
+	/**
+	 * Removes an entitlement from an account based on the provided
+	 * {@code RemoveEntitlementFromAccountRequest}.
+	 * 
+	 * @param removeEntitlementFromAccountRequest the request object containing
+	 *                                            parameters for removing the
+	 *                                            entitlement from the account
+	 * @return {@code true} if the entitlement removal is successful, {@code false}
+	 *         otherwise
+	 * @throws AuthenticationException if authentication fails, indicating that the
+	 *                                 user is not authenticated
+	 * @throws IOException             if an I/O error occurs while making the
+	 *                                 request, such as network failure
+	 * @throws Exception               if an unexpected error occurs during the
+	 *                                 entitlement removal process
+	 */
+
+	public boolean removeEntitlementFromAccount(RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest)
+			throws AuthenticationException, IOException, Exception {
+		EicResponse eicResponse = removeEntitlementFromAccount(removeEntitlementFromAccountRequest, true);
+		RemoveEntitlementFromAccountResponse removeEntitlementFromAccountResponse = new Gson()
+				.fromJson(eicResponse.getBody(), RemoveEntitlementFromAccountResponse.class);
+		String errorCode = removeEntitlementFromAccountResponse.getErrorCode();
+		if (errorCode.equals("0")) {
+			return true;
+		} else {
+			throw new Exception(removeEntitlementFromAccountResponse.getMessage());
+		}
+	}
+
+	private EicResponse removeEntitlementFromAccount(
+			RemoveEntitlementFromAccountRequest removeEntitlementFromAccountRequest, Boolean test)
+			throws AuthenticationException, IOException, Exception {
+		Map<String, Object> apiConfig = getApiConfigMap("Accounts", "Remove_Entitlement_From_Account");
+		String apiUrl = EIC_BASE_URL + apiConfig.get("URL");
+		String method = (String) apiConfig.get("METHOD");
+		String requestBody = EicClientUtils.xWwwFormUrlencoder(removeEntitlementFromAccountRequest);
+		@SuppressWarnings("unchecked")
+		Map<String, String> headers = (Map<String, String>) apiConfig.get("HEADER");
+		headers.put("Authorization", "Bearer " + getAccessToken());
+		EicRequest eicRequest = new EicRequest(apiUrl, method, headers, requestBody);
+		EicResponse eicResponse = EicClientUtils.sendRequest(eicRequest);
+		if (eicResponse.getResponseCode() >= 200 && eicResponse.getResponseCode() <= 299) {
 			return eicResponse;
 		} else {
 			throw new Exception(eicResponse.toString());
