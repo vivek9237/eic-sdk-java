@@ -29,7 +29,7 @@ It initializes EicClient with tenant, username, and password, attempts to retrie
 
 #### App.java
 ```Java
-import com.github.vivek9237.eic.restsdk.EicClient;
+import io.github.vivek9237.eic.restsdk.EicClient;
 
 public class App {
     public static void main( String[] args )
