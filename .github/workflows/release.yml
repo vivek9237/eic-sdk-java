@@ -1,4 +1,4 @@
-name: Java Maven Build & Publish Artifact
+name: Build
 on:
   push:
     branches: [ "main" ]
