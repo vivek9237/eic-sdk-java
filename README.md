@@ -1,5 +1,11 @@
 # EIC REST SDK
 
+[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
+![Platform](https://img.shields.io/badge/java-%3E%3D8-blue)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://raw.githubusercontent.com/vivek9237/eic-sdk-java/main/LICENSE)
+[![Build main](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml/badge.svg)](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml)
+
+
 ## About
 This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
 
