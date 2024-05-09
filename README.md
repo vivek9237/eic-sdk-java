@@ -4,6 +4,7 @@
 ![Platform](https://img.shields.io/badge/java-%3E%3D8-blue)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://raw.githubusercontent.com/vivek9237/eic-sdk-java/main/LICENSE)
 [![Build main](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml/badge.svg)](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml)
+[![Javadoc](https://img.shields.io/badge/javadoc-blue)](https://vivek9237.github.io/eic-sdk-java/javadoc/)
 
 
 ## About
