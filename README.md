@@ -1,17 +1,28 @@
-# EIC REST SDK
 
+
+<br />
+<div align="center">
+    
 [![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
-![Platform](https://img.shields.io/badge/java-%3E%3D8-blue)
+![Platform](https://img.shields.io/badge/java-1.8-blue)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://raw.githubusercontent.com/vivek9237/eic-sdk-java/main/LICENSE)
 [![Build main](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml/badge.svg)](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml)
 [![Javadoc](https://img.shields.io/badge/javadoc-blue)](https://vivek9237.github.io/eic-sdk-java/javadoc/)
 
 
-## About
-This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
+  <h1 align="center">EIC REST SDK</h1>
 
-## Documentation
-- [Javadoc](https://vivek9237.github.io/eic-sdk-java/javadoc/)
+  <p align="center">
+    This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
+    <br />
+    <a href="https://vivek9237.github.io/eic-sdk-java/javadoc/"><strong>Explore SDK Javadoc »</strong></a>
+    <br />
+    <br />
+  </p>
+</div>
+
+
+## Getting Started
 
 ## Environment Variables
 To run this project, you will need to add the following environment variables to your .env file
