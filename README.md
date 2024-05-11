@@ -21,21 +21,39 @@
   </p>
 </div>
 
+## Features
+
+- Fetching Users
+- Fetching Dataset_values
+- Fetching Accounts
 
 ## Getting Started
+To get started with the EIC REST SDK, follow these steps:
 
-## Environment Variables
+### Prerequisites
+- Java Development Kit (JDK) version 8
+- Apache Maven
+- Update your Maven settings.xml file to include credentials for GitHub Packages, if you haven't already done so. You can follow the [GitHub documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) for instructions on how to set up authentication for GitHub Packages in Maven.
+
+### Installation
+You can include the EIC REST SDK in your Maven project by adding the following dependency to your `pom.xml` file:
+
+```xml
+<dependency>
+  <groupId>io.github.vivek9237.eic.restsdk</groupId>
+  <artifactId>eic-sdk-java</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
+```
+> **_NOTE:_**   For more information, see [EIC=SDK-JAVA Package](https://github.com/vivek9237/eic-sdk-java/packages/2144093)
+
+### Environment Variables
 To run this project, you will need to add the following environment variables to your .env file
 
 - `EIC_TENANT` EIC tenant name
 
 - `EIC_REFRESH_TOKEN` EIC API Refresh Token
 
-## Features
-
-- Fetching Users
-- Fetching Dataset_values
-- Fetching Accounts
 
 ## Sample SDK Usage
 ### Sample Java program
