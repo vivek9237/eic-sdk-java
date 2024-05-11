@@ -109,3 +109,6 @@ EicClient eicClient = new EicClient("<tenant name>", "<refresh token>");
 List<Map<String, Object>> datasetValues = eicClient.getDatasetValues("Test_Dataset");
         
 ```
+
+<br><hr>
+[🔼 Back to top](#Sample-snippets-for-SDK-Implementation)
