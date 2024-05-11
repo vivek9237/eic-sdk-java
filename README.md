@@ -27,11 +27,9 @@
 ## Environment Variables
 To run this project, you will need to add the following environment variables to your .env file
 
-`EIC_TENANT` EIC tenant name
+- `EIC_TENANT` EIC tenant name
 
-`EIC_USERNAME` EIC username with appropriate permissions
-
-`EIC_PASSWORD` EIC password
+- `EIC_REFRESH_TOKEN` EIC API Refresh Token
 
 ## Features
 
@@ -48,13 +46,18 @@ It initializes EicClient with tenant, username, and password, attempts to retrie
 #### App.java
 ```Java
 import io.github.vivek9237.eic.restsdk.EicClient;
+import java.util.logging.Logger;
+import java.util.Map;
 
 public class App {
+    Logger log = Logger.getLogger(SampleUsage.class.getName());
     public static void main( String[] args )
     {
         try {
-            // Creating an instance of the EicClient class with tenant, username, and password parameters
-            EicClient eicClient = new EicClient("company-tenant","admin","strongestPassword");
+            //Fetch all the environment variables
+            Map<String, String> envVariables = System.getenv();
+            // Creating an instance of the EicClient class with tenant, and refreshToken parameters
+            EicClient eicClient = new EicClient(envVariables.get("EIC_TENANT"), envVariables.get("EIC_REFRESH_TOKEN"));
             // Attempting to retrieve user information for the username "admin"
             System.out.println(eicClient.getUserByUsername("admin"));
         } catch (Exception e) {
