@@ -43,6 +43,14 @@ EicClient eicClient = new EicClient("<tenant name>", "<refresh token>");
         
 ```
 
+#### Update User
+
+```Java
+EicClient eicClient = new EicClient("<tenant name>", "<refresh token>");
+//To be updated
+        
+```
+
 ### Account Management
 #### Get Accounts associated to a user
 
