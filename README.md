@@ -10,7 +10,7 @@
 [![Javadoc](https://img.shields.io/badge/javadoc-blue)](https://vivek9237.github.io/eic-sdk-java/javadoc/)
 
 
-  <h1 align="center">EIC REST SDK</h1>
+  <h1 align="center">EIC SDK JAVA</h1>
 
   <p align="center">
     This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
@@ -28,7 +28,7 @@
 - Fetching Accounts
 
 ## Getting Started
-To get started with the EIC REST SDK, follow these steps:
+To get started with the EIC SDK JAVA, follow these steps:
 
 ### Prerequisites
 - Java Development Kit (JDK) version 8
@@ -36,7 +36,7 @@ To get started with the EIC REST SDK, follow these steps:
 - Update your Maven settings.xml file to include credentials for GitHub Packages, if you haven't already done so. You can follow the [GitHub documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-apache-maven-registry) for instructions on how to set up authentication for GitHub Packages in Maven.
 
 ### Installation
-You can include the EIC REST SDK in your Maven project by adding the following dependency to your `pom.xml` file:
+You can include the EIC SDK JAVA in your Maven project by adding the following dependency to your `pom.xml` file:
 
 ```xml
 <dependency>
