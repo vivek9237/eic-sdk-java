@@ -1,4 +1,8 @@
+<p align="center">
+  <img src="https://github.com/vivek9237/eic-sdk-java/blob/main/images/saviynt-logo.jpeg" alt= “saviynt-dev-logo” width="30%" height="50%">
+</p>
 
+<h1 align="center">EIC SDK JAVA</h1>
 
 <br />
 <div align="center">
@@ -9,8 +13,6 @@
 [![Build main](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml/badge.svg)](https://github.com/vivek9237/eic-sdk-java/actions/workflows/release.yml)
 [![Javadoc](https://img.shields.io/badge/javadoc-blue)](https://vivek9237.github.io/eic-sdk-java/javadoc/)
 
-
-  <h1 align="center">EIC SDK JAVA</h1>
 
   <p align="center">
     This Java-based SDK easily connects with Saviynt's EIC, using EIC v5 APIs for smooth integration. It's user-friendly, with simple steps for connectivity, clear instructions, and a focus on security. Developers can make efficient and powerful solutions by using EIC v5 API features in this SDK.
@@ -23,9 +25,9 @@
 
 ## Features
 
-- Fetching Users
-- Fetching Dataset_values
-- Fetching Accounts
+- User Management
+- Account Management
+- Dataset_values Management
 
 ## Getting Started
 To get started with the EIC SDK JAVA, follow these steps:
