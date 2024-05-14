@@ -38,6 +38,7 @@ public class EicCommonUtils {
      * Converts a string to a date using the specified date format.
      *
      * @param dateString the string representation of the date
+     * @param dateFormat the date format of the input dateString
      * @return the Date object
      * @throws ParseException if the date string cannot be parsed
      */
@@ -50,6 +51,7 @@ public class EicCommonUtils {
      * Converts a date to a string using the specified date format.
      *
      * @param date the Date object
+     * @param dateFormat the date format of the output dateString
      * @return the string representation of the date
      */
     public static String dateToString(Date date, String dateFormat) {
